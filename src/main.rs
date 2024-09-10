@@ -5,14 +5,14 @@
 // Tarea corta 1: parte 1                                                                        .
 //                                                                                               .
 // Este programa recibe en la linea de comandos un archivo de texto y escribe en un archivo      .
-// de salida (tokens.out) la secuencia de tokens leído del archivo de texto original e incluye la. 
-// línea y columna del archivo fuente en que fue encontrado.                                     . 
+// de salida (tokens.out) la secuencia de tokens leído del archivo de texto original e incluye la.
+// línea y columna del archivo fuente en que fue encontrado.                                     .
 // ...............................................................................................
 
 use std::env;
-use std::fs::File;
 use std::fmt;
-use std::io::{self, BufReader, BufWriter, Write, Read};
+use std::fs::File;
+use std::io::{self, BufReader, BufWriter, Read, Write};
 
 // Deriva automáticamente las implementaciones de Debug y Clone para la estructura Token.
 // Debug permite formatear el Token para depuración, y Clone permite duplicarlo.
@@ -21,9 +21,9 @@ use std::io::{self, BufReader, BufWriter, Write, Read};
 // Define una estructura llamada Token que representará un token con tres campos:
 // 'tipo' para el tipo de token, 'linea' y 'columna' para su ubicación en el archivo.
 struct Token {
-    tipo: TokenType,  // El tipo del token (definido más adelante como una enumeración TokenType).
-    linea: usize,     // La línea donde se encuentra el token (un valor entero sin signo).
-    columna: usize,   // La columna donde se encuentra el token (un valor entero sin signo).
+    tipo: TokenType, // El tipo del token (definido más adelante como una enumeración TokenType).
+    linea: usize,    // La línea donde se encuentra el token (un valor entero sin signo).
+    columna: usize,  // La columna donde se encuentra el token (un valor entero sin signo).
 }
 
 // Deriva automáticamente las implementaciones de Debug y Clone para la enumeración TokenType.
@@ -33,11 +33,11 @@ struct Token {
 // Define una enumeración (enum) llamada TokenType, que contiene varios tipos de tokens.
 // Cada variante de la enumeración puede almacenar diferentes tipos de datos (números, caracteres, etc.).
 enum TokenType {
-    Digit(i64),        // Representa un token numérico (almacena un número entero de 64 bits).
-    Char(char),        // Representa un token de carácter (almacena un carácter).
-    Ident(String),     // Representa un identificador (almacena una cadena de texto).
-    Op(String),        // Representa un operador (almacena una cadena de texto para el operador).
-    Other(String),     // Representa otros tipos de tokens (almacena una cadena para otros valores).
+    Digit(i64),    // Representa un token numérico (almacena un número entero de 64 bits).
+    Char(char),    // Representa un token de carácter (almacena un carácter).
+    Ident(String), // Representa un identificador (almacena una cadena de texto).
+    Op(String),    // Representa un operador (almacena una cadena de texto para el operador).
+    Other(String), // Representa otros tipos de tokens (almacena una cadena para otros valores).
 }
 
 // Implementa el trait fmt::Display para TokenType, lo que permite convertir el token
@@ -62,7 +62,6 @@ impl fmt::Display for TokenType {
     }
 }
 
-
 // ===============================================================================================
 //                                          leer_archivo
 // ===============================================================================================
@@ -85,7 +84,7 @@ fn leer_archivo(archivo_entrada: &str) -> io::Result<String> {
 // ===============================================================================================
 //                                          escribir_archivo
 // ===============================================================================================
-// Función que toma una lista de tokens y escribe cada uno en un archivo de salida. 
+// Función que toma una lista de tokens y escribe cada uno en un archivo de salida.
 // Recibe el nombre del archivo de salida y la lista de tokens como parámetros.
 fn escribir_archivo(archivo_salida: &str, tokens: Vec<Token>) -> io::Result<()> {
     let output = File::create(archivo_salida).map_err(|e| {
@@ -104,51 +103,59 @@ fn escribir_archivo(archivo_salida: &str, tokens: Vec<Token>) -> io::Result<()> 
     Ok(())
 }
 
-
 // ===============================================================================================
 //                                          identifier
 // ===============================================================================================
 // Esta función intenta extraer un identificador del flujo de caracteres. Un identificador es una
 // secuencia de caracteres alfanuméricos que comienza con una letra. Devuelve un Token de tipo Ident
 // si se encuentra una secuencia válida, de lo contrario, devuelve None.
-fn identifier(chars: &mut impl Iterator<Item = char>, linea: usize, columna: usize) -> Option<Token> {
-    // Crea una nueva cadena para acumular los caracteres que forman el identificador.
+
+fn identifier(
+    chars: &mut std::iter::Peekable<impl Iterator<Item = char>>,
+    linea: usize,
+    mut columna: usize,
+) -> Option<Token> {
     let mut ident_str = String::new();
-    
-    // Intenta obtener el siguiente carácter del iterador.
-    if let Some(c) = chars.next() {
-        // Verifica si el carácter es una letra.
+    let start_columna = columna;
+
+    // Extrae el primer carácter y verifica si es una letra
+    if let Some(&c) = chars.peek() {
         if letter(c) {
-            // Si es una letra, añádelo a la cadena del identificador.
             ident_str.push(c);
+            println!("Primer carácter: {}", c); // Línea de depuración
+            chars.next(); // Consume el carácter
+            columna += 1;
+        } else {
+            return None; // Si el primer carácter no es una letra, no es un identificador
+        }
+    } else {
+        return None; // Si no hay ningún carácter, tampoco hay identificador
+    }
+
+    // Continua con los caracteres siguientes, verificando si son letras o dígitos
+    while let Some(&c) = chars.peek() {
+        if letter(c) || digit(c) {
+            ident_str.push(c);
+            println!("Carácter actual: {}", c); // Línea de depuración
+            chars.next(); // Consume el carácter
+            columna += 1;
+        } else {
+            break; // Si se encuentra un carácter no válido, termina el bucle
         }
     }
 
-    // Continúa extrayendo caracteres mientras sean letras o dígitos.
-    while let Some(c) = chars.next() {
-        // Verifica si el carácter es una letra o un dígito.
-        if letter(c) || digit(c) {
-            // Si es válido, añádelo a la cadena del identificador.
-            ident_str.push(c);
-        } else {
-            // Si se encuentra un carácter que no es letra ni dígito, termina el bucle.
-            break;
-        }
-    }
-    
-    // Crea y devuelve un Token de tipo Ident con la cadena de identificador acumulada,
-    // junto con la línea y la columna en la que se encontraba el primer carácter del identificador.
+    println!("Identificador encontrado: {}", ident_str); // Línea de depuración
     Some(Token {
         tipo: TokenType::Ident(ident_str),
         linea,
-        columna,
+        columna: start_columna,
     })
 }
 
 // ===============================================================================================
 //                                          digit
 // ===============================================================================================
-// Función auxiliar que determina si un carácter es un dígito numérico. Devuelve 'true' si el 
+// Función auxiliar que determina si un carácter es un dígito numérico. Devuelve 'true' si el
 // carácter es un dígito del 0 al 9, y 'false' en caso contrario.
 fn digit(c: char) -> bool {
     c.is_digit(10)
@@ -163,18 +170,18 @@ fn digit(c: char) -> bool {
 fn number(chars: &mut impl Iterator<Item = char>, linea: usize, columna: usize) -> Option<Token> {
     // Crea una cadena mutable para construir el número a partir de caracteres.
     let mut num_str = String::new();
-    
+
     // Intenta obtener el siguiente carácter del iterador.
     if let Some(c) = chars.next() {
-        // Si el carácter es un dígito, lo añade a la cadena `num_str`.
+        // Si el carácter es un dígito, lo añade a la cadena num_str.
         if digit(c) {
             num_str.push(c);
         }
     }
-    
-    // Mientras haya más caracteres, sigue añadiendo dígitos a `num_str`.
+
+    // Mientras haya más caracteres, sigue añadiendo dígitos a num_str.
     while let Some(c) = chars.next() {
-        // Si el carácter es un dígito, lo añade a la cadena `num_str`.
+        // Si el carácter es un dígito, lo añade a la cadena num_str.
         if digit(c) {
             num_str.push(c);
         } else {
@@ -182,16 +189,15 @@ fn number(chars: &mut impl Iterator<Item = char>, linea: usize, columna: usize) 
             break;
         }
     }
-    
-    // Intenta convertir la cadena `num_str` a un número entero de 64 bits (i64).
-    // Si la conversión es exitosa, crea un token del tipo `Digit` con el número y la posición actual.
+
+    // Intenta convertir la cadena num_str a un número entero de 64 bits (i64).
+    // Si la conversión es exitosa, crea un token del tipo Digit con el número y la posición actual.
     num_str.parse::<i64>().ok().map(|n| Token {
         tipo: TokenType::Digit(n),
         linea,
         columna,
     })
 }
-
 
 // ===============================================================================================
 //                                          operator
@@ -203,7 +209,7 @@ fn number(chars: &mut impl Iterator<Item = char>, linea: usize, columna: usize) 
 fn operator(chars: &mut impl Iterator<Item = char>, linea: usize, columna: usize) -> Option<Token> {
     // Crea una nueva cadena para acumular los caracteres que forman el operador.
     let mut op_str = String::new();
-    
+
     // Intenta obtener el siguiente carácter del iterador.
     if let Some(c) = chars.next() {
         // Verifica si el carácter es un símbolo de operador válido.
@@ -224,7 +230,7 @@ fn operator(chars: &mut impl Iterator<Item = char>, linea: usize, columna: usize
             break;
         }
     }
-    
+
     // Crea y devuelve un Token de tipo Op con la cadena de operadores acumulada,
     // junto con la línea y la columna en la que se encontraba el primer carácter del operador.
     Some(Token {
@@ -234,20 +240,27 @@ fn operator(chars: &mut impl Iterator<Item = char>, linea: usize, columna: usize
     })
 }
 
-
-
 // ===============================================================================================
 //                                          get_spaces
 // ===============================================================================================
 // Función que avanza el iterador saltando los espacios en blanco, las tabulaciones y las nuevas líneas.
 // No devuelve ningún valor; simplemente mueve el cursor hasta que encuentra un carácter no vacío.
-fn get_spaces(chars: &mut impl Iterator<Item = char>) {
-    while let Some(c) = chars.next() {
-        if !space(c) {
+fn get_spaces(chars: &mut std::iter::Peekable<impl Iterator<Item = char>>, columna: &mut usize, linea: &mut usize) {
+    while let Some(&c) = chars.peek() {
+        if c == ' ' {
+            *columna += 1;
+        } else if c == '\t' {
+            *columna += 4; // Asumiendo tabulación de 4 espacios
+        } else if c == '\n' {
+            *linea += 1;
+            *columna = 1;
+        } else {
             break;
         }
+        chars.next();
     }
 }
+
 
 // ===============================================================================================
 //                                          letter
@@ -264,9 +277,11 @@ fn letter(c: char) -> bool {
 // Función auxiliar que verifica si un carácter es un operador válido según la gramática especificada.
 // Devuelve 'true' si el carácter es uno de los operadores definidos, y 'false' en caso contrario.
 fn op_character(c: char) -> bool {
-    matches!(c, '+' | '-' | '*' | '/' | '=' | '<' | '>' | '\\' | '&' | '@' | '%' | '^' | '?')
+    matches!(
+        c,
+        '+' | '-' | '*' | '/' | '=' | '<' | '>' | '\\' | '&' | '@' | '%' | '^' | '?'
+    )
 }
-
 
 // ===============================================================================================
 //                                          space
@@ -277,14 +292,17 @@ fn space(c: char) -> bool {
     matches!(c, ' ' | '\t' | '\n')
 }
 
-
 // ===============================================================================================
 //                                          character
 // ===============================================================================================
 // Esta función intenta extraer un carácter delimitado por comillas simples ('') del flujo de
 // caracteres. Devuelve un Token de tipo Char si se encuentra un carácter válido, de lo contrario,
 // devuelve None.
-fn character(chars: &mut impl Iterator<Item = char>, linea: usize, columna: usize) -> Option<Token> {
+fn character(
+    chars: &mut impl Iterator<Item = char>,
+    linea: usize,
+    columna: usize,
+) -> Option<Token> {
     // Intenta obtener el siguiente carácter del iterador.
     if let Some(c) = chars.next() {
         // Verifica si el carácter es una comilla simple de apertura.
@@ -310,7 +328,6 @@ fn character(chars: &mut impl Iterator<Item = char>, linea: usize, columna: usiz
     None
 }
 
-
 // ===============================================================================================
 //                                          other
 // ===============================================================================================
@@ -319,15 +336,51 @@ fn character(chars: &mut impl Iterator<Item = char>, linea: usize, columna: usiz
 fn other(chars: &mut impl Iterator<Item = char>, linea: usize, columna: usize) -> Option<Token> {
     if let Some(c) = chars.next() {
         match c {
-            '.' => Some(Token { tipo: TokenType::Other("dot".to_string()), linea, columna }),
-            ',' => Some(Token { tipo: TokenType::Other("comma".to_string()), linea, columna }),
-            ';' => Some(Token { tipo: TokenType::Other("semicolon".to_string()), linea, columna }),
-            '(' => Some(Token { tipo: TokenType::Other("lparen".to_string()), linea, columna }),
-            ')' => Some(Token { tipo: TokenType::Other("rparen".to_string()), linea, columna }),
-            '[' => Some(Token { tipo: TokenType::Other("lbracket".to_string()), linea, columna }),
-            ']' => Some(Token { tipo: TokenType::Other("rbracket".to_string()), linea, columna }),
-            '{' => Some(Token { tipo: TokenType::Other("lcurly".to_string()), linea, columna }),
-            '}' => Some(Token { tipo: TokenType::Other("rcurly".to_string()), linea, columna }),
+            '.' => Some(Token {
+                tipo: TokenType::Other("dot".to_string()),
+                linea,
+                columna,
+            }),
+            ',' => Some(Token {
+                tipo: TokenType::Other("comma".to_string()),
+                linea,
+                columna,
+            }),
+            ';' => Some(Token {
+                tipo: TokenType::Other("semicolon".to_string()),
+                linea,
+                columna,
+            }),
+            '(' => Some(Token {
+                tipo: TokenType::Other("lparen".to_string()),
+                linea,
+                columna,
+            }),
+            ')' => Some(Token {
+                tipo: TokenType::Other("rparen".to_string()),
+                linea,
+                columna,
+            }),
+            '[' => Some(Token {
+                tipo: TokenType::Other("lbracket".to_string()),
+                linea,
+                columna,
+            }),
+            ']' => Some(Token {
+                tipo: TokenType::Other("rbracket".to_string()),
+                linea,
+                columna,
+            }),
+            '{' => Some(Token {
+                tipo: TokenType::Other("lcurly".to_string()),
+                linea,
+                columna,
+            }),
+            '}' => Some(Token {
+                tipo: TokenType::Other("rcurly".to_string()),
+                linea,
+                columna,
+            }),
             _ => None,
         }
     } else {
@@ -354,90 +407,52 @@ fn comment(chars: &mut impl Iterator<Item = char>) {
 // Esta función toma un iterador de caracteres con capacidad de "peek" y convierte el contenido en una
 // lista de tokens. Analiza caracteres para identificar espacios, comentarios, identificadores, números,
 // operadores, caracteres y otros símbolos. Devuelve un vector de tokens generados.
-fn tokenize(mut chars: std::iter::Peekable<impl Iterator<Item = char>>) -> Vec<Token> {
-    // Crea un vector vacío para almacenar los tokens generados.
+fn tokenize(chars: &mut std::iter::Peekable<impl Iterator<Item = char>>) -> Vec<Token> {
     let mut tokens = Vec::new();
-    
-    // Inicializa el número de línea y columna en 1.
     let mut linea = 1;
     let mut columna = 1;
 
-    // Itera sobre los caracteres usando "peek" para ver el siguiente carácter sin consumirlo.
     while let Some(&c) = chars.peek() {
-        // Si el carácter es un espacio (espacios en blanco, tabulaciones o saltos de línea).
         if space(c) {
-            // Si el carácter es un salto de línea, incrementa el número de línea y reinicia la columna.
-            if c == '\n' {
-                linea += 1;
-                columna = 1;
-            } else {
-                // Si el carácter es un espacio en blanco, simplemente incrementa la columna.
-                columna += 1;
-            }
-            // Llama a `get_spaces` para consumir todos los espacios en blanco consecutivos.
-            get_spaces(&mut chars);
-        // Si el carácter es un signo de exclamación, se trata de un comentario.
+            get_spaces(chars, &mut columna, &mut linea);
         } else if c == '!' {
-            // Llama a `comment` para consumir el comentario.
-            comment(&mut chars);
-        // Si el carácter es una letra, se trata de un identificador.
+            comment(chars);
         } else if letter(c) {
-            // Llama a `identifier` para extraer el identificador y, si se encuentra uno, añádelo al vector de tokens.
-            if let Some(token) = identifier(&mut chars, linea, columna) {
-                // Actualiza la columna después de añadir el token.
+            if let Some(token) = identifier(chars, linea, columna) {
                 columna += token.tipo.to_string().len();
-                // Añade el token al vector de tokens.
                 tokens.push(token);
             }
-        // Si el carácter es un dígito, se trata de un número.
         } else if digit(c) {
-            // Llama a `number` para extraer el número y, si se encuentra uno, añádelo al vector de tokens.
-            if let Some(token) = number(&mut chars, linea, columna) {
-                // Actualiza la columna después de añadir el token.
+            if let Some(token) = number(chars, linea, columna) {
                 columna += token.tipo.to_string().len();
-                // Añade el token al vector de tokens.
                 tokens.push(token);
             }
-        // Si el carácter es un operador.
         } else if op_character(c) {
-            // Llama a `operator` para extraer el operador y, si se encuentra uno, añádelo al vector de tokens.
-            if let Some(token) = operator(&mut chars, linea, columna) {
-                // Actualiza la columna después de añadir el token.
+            if let Some(token) = operator(chars, linea, columna) {
                 columna += token.tipo.to_string().len();
-                // Añade el token al vector de tokens.
                 tokens.push(token);
             }
-        // Si el carácter es un apóstrofe, se trata de un carácter.
         } else if c == '\'' {
-            // Llama a `character` para extraer el carácter y, si se encuentra uno, añádelo al vector de tokens.
-            if let Some(token) = character(&mut chars, linea, columna) {
-                // Actualiza la columna después de añadir el token.
+            if let Some(token) = character(chars, linea, columna) {
                 columna += token.tipo.to_string().len();
-                // Añade el token al vector de tokens.
                 tokens.push(token);
             }
         } else {
-            // Para cualquier otro carácter, intenta extraer un token de tipo "otro".
-            if let Some(token) = other(&mut chars, linea, columna) {
-                // Actualiza la columna después de añadir el token.
+            if let Some(token) = other(chars, linea, columna) {
                 columna += token.tipo.to_string().len();
-                // Añade el token al vector de tokens.
                 tokens.push(token);
             }
         }
     }
-    // Devuelve el vector de tokens generados.
     tokens
 }
-
-
 
 // ===============================================================================================
 //                                          main
 // ===============================================================================================
 // Función principal que maneja la lógica de entrada y salida de archivos. Recoge los argumentos,
 // llama a la función que lee el archivo de entrada y escribe los tokens generados en el archivo
-// de salida tokens.out o el especificado por el usuario. 
+// de salida tokens.out o el especificado por el usuario.
 fn main() -> io::Result<()> {
     let args: Vec<String> = env::args().collect();
     let mut output_file = "output.tok".to_string();
@@ -459,7 +474,7 @@ fn main() -> io::Result<()> {
     let buffer = leer_archivo(input_file)?;
 
     // Tokenización
-    let tokens = tokenize(buffer.chars().peekable());
+    let tokens = tokenize(&mut buffer.chars().peekable());
 
     // Llamada a la función para escribir los tokens en el archivo de salida
     escribir_archivo(&output_file, tokens)?;

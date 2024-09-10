@@ -455,7 +455,7 @@ fn tokenize(chars: &mut std::iter::Peekable<impl Iterator<Item = char>>) -> Vec<
 // de salida tokens.out o el especificado por el usuario.
 fn main() -> io::Result<()> {
     let args: Vec<String> = env::args().collect();
-    let mut output_file = "tokens.out".to_string();
+    let mut output_file = "output.tok".to_string();
 
     if args.len() < 2 || args.len() > 4 {
         eprintln!("Uso: {} <archivo_entrada> [-o <archivo_salida>]", args[0]);

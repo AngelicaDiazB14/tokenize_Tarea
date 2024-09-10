@@ -245,7 +245,7 @@ fn operator(chars: &mut impl Iterator<Item = char>, linea: usize, columna: usize
 // ===============================================================================================
 // Función que avanza el iterador saltando los espacios en blanco, las tabulaciones y las nuevas líneas.
 // No devuelve ningún valor; simplemente mueve el cursor hasta que encuentra un carácter no vacío.
-fn get_spaces(chars: &mut std::iter::Peekable<impl Iterator<Item = char>>, mut columna: &mut usize, mut linea: &mut usize) {
+fn get_spaces(chars: &mut std::iter::Peekable<impl Iterator<Item = char>>, columna: &mut usize, linea: &mut usize) {
     while let Some(&c) = chars.peek() {
         if c == ' ' {
             *columna += 1;

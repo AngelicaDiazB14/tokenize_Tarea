@@ -13,6 +13,7 @@ use std::env;
 use std::fs::File;
 use std::fmt;
 use std::io::{self, BufReader, BufWriter, Write, Read};
+//use crate::TokenType::Digit;
 
 // Deriva automáticamente las implementaciones de Debug y Clone para la estructura Token.
 // Debug permite formatear el Token para depuración, y Clone permite duplicarlo.
@@ -59,6 +60,14 @@ impl fmt::Display for TokenType {
             // Si el TokenType es Other, formatea la salida como "Other(s)", donde 's' es el valor.
             TokenType::Other(ref s) => write!(f, "Other({})", s),
         }
+    }
+}
+
+fn subtract_token_type(token: &TokenType) -> usize {
+    match token {
+        TokenType::Digit(_) | TokenType::Ident(_) | TokenType::Other(_) => 7,
+        TokenType::Char(_) => 6,
+        TokenType::Op(_) => 4,
     }
 }
 
@@ -120,24 +129,27 @@ fn identifier(chars: &mut impl Iterator<Item = char>, linea: usize, columna: usi
         // Verifica si el carácter es una letra.
         if letter(c) {
             // Si es una letra, añádelo a la cadena del identificador.
-            ident_str.push(c);
+            ident_str.push(c);   
         }
     }
 
     // Continúa extrayendo caracteres mientras sean letras o dígitos.
-    while let Some(c) = chars.next() {
+    while let Some(c) = chars.next(){
+
         // Verifica si el carácter es una letra o un dígito.
         if letter(c) || digit(c) {
             // Si es válido, añádelo a la cadena del identificador.
             ident_str.push(c);
+            //revisar
         } else {
             // Si se encuentra un carácter que no es letra ni dígito, termina el bucle.
             break;
         }
     }
-    
+
     // Crea y devuelve un Token de tipo Ident con la cadena de identificador acumulada,
     // junto con la línea y la columna en la que se encontraba el primer carácter del identificador.
+
     Some(Token {
         tipo: TokenType::Ident(ident_str),
         linea,
@@ -241,10 +253,24 @@ fn operator(chars: &mut impl Iterator<Item = char>, linea: usize, columna: usize
 // ===============================================================================================
 // Función que avanza el iterador saltando los espacios en blanco, las tabulaciones y las nuevas líneas.
 // No devuelve ningún valor; simplemente mueve el cursor hasta que encuentra un carácter no vacío.
+// fn get_spaces(chars: &mut impl Iterator<Item = char>) {
+    
+//     while let Some(c) = chars.next() {
+//         if !space(c) {
+//             return
+//         } else {
+//             continue
+//         }
+//     }
+// }
+
+
 fn get_spaces(chars: &mut impl Iterator<Item = char>) {
     while let Some(c) = chars.next() {
         if !space(c) {
-            break;
+            continue;
+        } else {
+            return;
         }
     }
 }
@@ -348,6 +374,12 @@ fn comment(chars: &mut impl Iterator<Item = char>) {
     }
 }
 
+
+fn add_columns(token: &Token) -> usize{
+    let token_length = token.tipo.to_string().len();
+    token_length - subtract_token_type(&token.tipo)
+}
+
 // ===============================================================================================
 //                                          tokenize
 // ===============================================================================================
@@ -370,12 +402,14 @@ fn tokenize(mut chars: std::iter::Peekable<impl Iterator<Item = char>>) -> Vec<T
             if c == '\n' {
                 linea += 1;
                 columna = 1;
+
             } else {
                 // Si el carácter es un espacio en blanco, simplemente incrementa la columna.
                 columna += 1;
             }
             // Llama a `get_spaces` para consumir todos los espacios en blanco consecutivos.
             get_spaces(&mut chars);
+
         // Si el carácter es un signo de exclamación, se trata de un comentario.
         } else if c == '!' {
             // Llama a `comment` para consumir el comentario.
@@ -385,7 +419,7 @@ fn tokenize(mut chars: std::iter::Peekable<impl Iterator<Item = char>>) -> Vec<T
             // Llama a `identifier` para extraer el identificador y, si se encuentra uno, añádelo al vector de tokens.
             if let Some(token) = identifier(&mut chars, linea, columna) {
                 // Actualiza la columna después de añadir el token.
-                columna += token.tipo.to_string().len();
+                columna += add_columns(&token) + 1;
                 // Añade el token al vector de tokens.
                 tokens.push(token);
             }
@@ -394,7 +428,7 @@ fn tokenize(mut chars: std::iter::Peekable<impl Iterator<Item = char>>) -> Vec<T
             // Llama a `number` para extraer el número y, si se encuentra uno, añádelo al vector de tokens.
             if let Some(token) = number(&mut chars, linea, columna) {
                 // Actualiza la columna después de añadir el token.
-                columna += token.tipo.to_string().len();
+                columna += add_columns(&token);
                 // Añade el token al vector de tokens.
                 tokens.push(token);
             }
@@ -403,7 +437,7 @@ fn tokenize(mut chars: std::iter::Peekable<impl Iterator<Item = char>>) -> Vec<T
             // Llama a `operator` para extraer el operador y, si se encuentra uno, añádelo al vector de tokens.
             if let Some(token) = operator(&mut chars, linea, columna) {
                 // Actualiza la columna después de añadir el token.
-                columna += token.tipo.to_string().len();
+                columna += add_columns(&token);
                 // Añade el token al vector de tokens.
                 tokens.push(token);
             }
@@ -412,7 +446,7 @@ fn tokenize(mut chars: std::iter::Peekable<impl Iterator<Item = char>>) -> Vec<T
             // Llama a `character` para extraer el carácter y, si se encuentra uno, añádelo al vector de tokens.
             if let Some(token) = character(&mut chars, linea, columna) {
                 // Actualiza la columna después de añadir el token.
-                columna += token.tipo.to_string().len();
+                columna += add_columns(&token);
                 // Añade el token al vector de tokens.
                 tokens.push(token);
             }
@@ -420,7 +454,7 @@ fn tokenize(mut chars: std::iter::Peekable<impl Iterator<Item = char>>) -> Vec<T
             // Para cualquier otro carácter, intenta extraer un token de tipo "otro".
             if let Some(token) = other(&mut chars, linea, columna) {
                 // Actualiza la columna después de añadir el token.
-                columna += token.tipo.to_string().len();
+                columna += add_columns(&token);
                 // Añade el token al vector de tokens.
                 tokens.push(token);
             }

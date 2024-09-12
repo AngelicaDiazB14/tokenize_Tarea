@@ -145,11 +145,12 @@ fn identifier(
     }
 
     println!("Identificador encontrado: {}", ident_str); // Línea de depuración
+    println!("comenzó en columna {}", start_columna);
     Some(Token {
         tipo: TokenType::Ident(ident_str),
         linea,
         columna: start_columna,
-    })
+    }) 
 }
 
 // ===============================================================================================
@@ -402,6 +403,21 @@ fn comment(chars: &mut impl Iterator<Item = char>) {
 }
 
 // ===============================================================================================
+//                                         get_token_length
+// ===============================================================================================
+//Devuelve la longitud del contenido del token
+fn get_token_length(token: &Token) -> usize {
+    match &token.tipo {
+        TokenType::Digit(n) => n.to_string().len(),         // Longitud del número en cadena
+        TokenType::Char(c) => c.to_string().len(),          // Longitud del carácter en cadena (si es un solo carácter)
+        TokenType::Ident(ref s) => s.len(),                 // Longitud del identificador en cadena
+        TokenType::Op(ref s) => s.len(),                    // Longitud del operador en cadena
+        TokenType::Other(ref s) => s.len(),                 // Longitud del otro tipo de token en cadena
+    }
+}
+
+
+// ===============================================================================================
 //                                          tokenize
 // ===============================================================================================
 // Esta función toma un iterador de caracteres con capacidad de "peek" y convierte el contenido en una
@@ -417,35 +433,38 @@ fn tokenize(chars: &mut std::iter::Peekable<impl Iterator<Item = char>>) -> Vec<
             get_spaces(chars, &mut columna, &mut linea);
         } else if c == '!' {
             comment(chars);
+            linea += 1;
         } else if letter(c) {
             if let Some(token) = identifier(chars, linea, columna) {
-                columna += token.tipo.to_string().len();
+                columna += get_token_length(&token); 
                 tokens.push(token);
+                
             }
         } else if digit(c) {
             if let Some(token) = number(chars, linea, columna) {
-                columna += token.tipo.to_string().len();
+                columna += get_token_length(&token); 
                 tokens.push(token);
             }
         } else if op_character(c) {
             if let Some(token) = operator(chars, linea, columna) {
-                columna += token.tipo.to_string().len();
+                columna += get_token_length(&token);
                 tokens.push(token);
             }
         } else if c == '\'' {
             if let Some(token) = character(chars, linea, columna) {
-                columna += token.tipo.to_string().len();
+                columna += get_token_length(&token); 
                 tokens.push(token);
             }
         } else {
             if let Some(token) = other(chars, linea, columna) {
-                columna += token.tipo.to_string().len();
+                columna += get_token_length(&token); 
                 tokens.push(token);
             }
         }
     }
     tokens
 }
+
 
 // ===============================================================================================
 //                                          main

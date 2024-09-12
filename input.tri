@@ -5,8 +5,9 @@ let
        (ord('A') <= ord(ch)) 
          /\ (ord(ch) <= ord('Z'))
 in
+15
 ! hola
-   if capital(current)
+   if capital(current) ! hola
    then 
    chr(ord(current) + shift)
    else current

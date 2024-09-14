@@ -33,20 +33,69 @@ struct Token {
 // Define una enumeración (enum) llamada TokenType, que contiene varios tipos de tokens.
 // Cada variante de la enumeración puede almacenar diferentes tipos de datos (números, caracteres, etc.).
 enum TokenType {
-    Digit(i64),    // Representa un token numérico (almacena un número entero de 64 bits).
-    Char(char),    // Representa un token de carácter (almacena un carácter).
-    Ident(String), // Representa un identificador (almacena una cadena de texto).
-    Op(String),    // Representa un operador (almacena una cadena de texto para el operador).
-    LParen,        // Representa un paréntesis izquierdo '('.
-    RParen,        // Representa un paréntesis derecho ')'.
-    LBracket,      // Representa un corchete izquierdo '['.
-    RBracket,      // Representa un corchete derecho ']'.
-    LCurly,        // Representa una llave izquierda '{'.
-    RCurly,        // Representa una llave derecha '}'.
-    Semicolon,     // Representa un punto y coma ';'.
-    Comma,         // Representa una coma ','.
-    Dot,           // Representa un punto '.'.
+    Digit(i64),
+    Char(char),
+    Ident(String),
+    Op(String),
+    Slash,         // /
+    Assign,        // :=
+    Equal,         // =
+    Tilde,         // ~
+    LParen,
+    RParen,
+    LBracket,
+    RBracket,
+    LCurly,
+    RCurly,
+    Semicolon,
+    Comma,
+    Dot,
+    Colon,
+    Array,     // Nueva variante para "array"
+    Begin,     // Nueva variante para "begin"
+    Const,     // Nueva variante para "const"
+    Do,        // Nueva variante para "do"
+    Else,      // Nueva variante para "else"
+    End,       // Nueva variante para "end"
+    Func,      // Nueva variante para "func"
+    If,        // Nueva variante para "if"
+    In,        // Nueva variante para "in"
+    Let,       // Nueva variante para "let"
+    Of,        // Nueva variante para "of"
+    Proc,      // Nueva variante para "proc"
+    Record,    // Nueva variante para "record"
+    Then,      // Nueva variante para "then"
+    Type,      // Nueva variante para "type"
+    Var,       // Nueva variante para "var"
+    While,     // Nueva variante para "while"
 }
+
+
+
+// Palabras reservadas
+fn es_palabra_reservada(s: &str) -> Option<TokenType> {
+    match s {
+        "array" => Some(TokenType::Array),
+        "begin" => Some(TokenType::Begin),
+        "const" => Some(TokenType::Const),
+        "do" => Some(TokenType::Do),
+        "else" => Some(TokenType::Else),
+        "end" => Some(TokenType::End),
+        "func" => Some(TokenType::Func),
+        "if" => Some(TokenType::If),
+        "in" => Some(TokenType::In),
+        "let" => Some(TokenType::Let),
+        "of" => Some(TokenType::Of),
+        "proc" => Some(TokenType::Proc),
+        "record" => Some(TokenType::Record),
+        "then" => Some(TokenType::Then),
+        "type" => Some(TokenType::Type),
+        "var" => Some(TokenType::Var),
+        "while" => Some(TokenType::While),
+        _ => None, // Si no es una palabra reservada, devuelve None
+    }
+}
+
 
 // Implementa el trait fmt::Display para TokenType, lo que permite convertir el token
 // en una cadena formateada cuando se imprime o muestra como texto.
@@ -59,18 +108,41 @@ impl fmt::Display for TokenType {
             TokenType::Char(c) => write!(f, "Char('{}')", c),
             TokenType::Ident(ref s) => write!(f, "Ident({})", s),
             TokenType::Op(ref s) => write!(f, "Op('{}')", s),
-            TokenType::LParen => write!(f, "LParen('(')"),       // Paréntesis izquierdo
-            TokenType::RParen => write!(f, "RParen(')')"),       // Paréntesis derecho
-            TokenType::LBracket => write!(f, "LBracket('[')"),   // Corchete izquierdo
-            TokenType::RBracket => write!(f, "RBracket(']')"),   // Corchete derecho
-            TokenType::LCurly => write!(f, "LCurly('{{')"),      // Llave izquierda (doble '{' por escapar)
-            TokenType::RCurly => write!(f, "RCurly('}}')"),      // Llave derecha (doble '}' por escapar)
-            TokenType::Semicolon => write!(f, "Semicolon(';')"), // Punto y coma
-            TokenType::Comma => write!(f, "Comma(',')"),         // Coma
-            TokenType::Dot => write!(f, "Dot('.')"),             // Punto
+            TokenType::Slash => write!(f, "/"),
+            TokenType::Assign => write!(f, ":="),
+            TokenType::Equal => write!(f, "="),
+            TokenType::Tilde => write!(f, "~"),
+            TokenType::LParen => write!(f, "("),
+            TokenType::RParen => write!(f, ")"),
+            TokenType::LBracket => write!(f, "["),
+            TokenType::RBracket => write!(f, "]"),
+            TokenType::LCurly => write!(f, "{{"),
+            TokenType::RCurly => write!(f, "}}"),
+            TokenType::Semicolon => write!(f, ";"),
+            TokenType::Comma => write!(f, ","),
+            TokenType::Dot => write!(f, "."),
+            TokenType::Colon => write!(f, ":"),
+            TokenType::Array => write!(f, "array"),
+            TokenType::Begin => write!(f, "begin"),
+            TokenType::Const => write!(f, "const"),
+            TokenType::Do => write!(f, "do"),
+            TokenType::Else => write!(f, "else"),
+            TokenType::End => write!(f, "end"),
+            TokenType::Func => write!(f, "func"),
+            TokenType::If => write!(f, "if"),
+            TokenType::In => write!(f, "in"),
+            TokenType::Let => write!(f, "let"),
+            TokenType::Of => write!(f, "of"),
+            TokenType::Proc => write!(f, "proc"),
+            TokenType::Record => write!(f, "record"),
+            TokenType::Then => write!(f, "then"),
+            TokenType::Type => write!(f, "type"),
+            TokenType::Var => write!(f, "var"),
+            TokenType::While => write!(f, "while"),
         }
     }
 }
+
 
 
 
@@ -145,7 +217,6 @@ fn identifier(
     if let Some(&c) = chars.peek() {
         if letter(c) {
             ident_str.push(c);
-            println!("Primer carácter: {}", c); // Línea de depuración
             chars.next(); // Consume el carácter
             columna += 1;
         } else {
@@ -159,7 +230,6 @@ fn identifier(
     while let Some(&c) = chars.peek() {
         if letter(c) || digit(c) {
             ident_str.push(c);
-            println!("Carácter actual: {}", c); // Línea de depuración
             chars.next(); // Consume el carácter
             columna += 1;
         } else {
@@ -167,14 +237,23 @@ fn identifier(
         }
     }
 
-    println!("Identificador encontrado: {}", ident_str); // Línea de depuración
-    println!("comenzó en columna {}", start_columna);
+    // Verifica si el identificador es una palabra reservada
+    if let Some(reserved_type) = es_palabra_reservada(&ident_str) {
+        return Some(Token {
+            tipo: reserved_type,
+            linea,
+            columna: start_columna,
+        });
+    }
+
+    // Si no es una palabra reservada, es un identificador normal
     Some(Token {
         tipo: TokenType::Ident(ident_str),
         linea,
         columna: start_columna,
-    }) 
+    })
 }
+
 
 // ===============================================================================================
 //                                          digit
@@ -380,11 +459,23 @@ fn get_token_length(token: &Token) -> usize {
         TokenType::LParen | TokenType::RParen => 1,         // Paréntesis ocupan 1 carácter
         TokenType::LBracket | TokenType::RBracket => 1,     // Corchetes ocupan 1 carácter
         TokenType::LCurly | TokenType::RCurly => 1,         // Llaves ocupan 1 carácter
-        TokenType::Semicolon => 1,                          // Punto y coma ocupa 1 carácter
+        TokenType::Semicolon | TokenType::Colon => 1,       // Punto y coma y dos puntos ocupan 1 carácter
         TokenType::Comma => 1,                              // Coma ocupa 1 carácter
         TokenType::Dot => 1,                                // Punto ocupa 1 carácter
+        TokenType::Slash => 1,                              // Diagonal ocupa 1 carácter
+        TokenType::Assign => 2,                             // Asignación ":=" ocupa 2 caracteres
+        TokenType::Equal => 1,                              // Igual "=" ocupa 1 carácter
+        TokenType::Tilde => 1,                              // Tilde "~" ocupa 1 carácter
+
+        // Agrega las variantes faltantes de las palabras reservadas
+        TokenType::Array | TokenType::Begin | TokenType::Const | TokenType::Do |
+        TokenType::Else | TokenType::End | TokenType::Func | TokenType::If |
+        TokenType::In | TokenType::Let | TokenType::Of | TokenType::Proc |
+        TokenType::Record | TokenType::Then | TokenType::Type | TokenType::Var |
+        TokenType::While => 1,  // Estas palabras clave son de 1 carácter de longitud
     }
 }
+
 
 
 // ===============================================================================================
@@ -404,6 +495,7 @@ fn tokenize(chars: &mut std::iter::Peekable<impl Iterator<Item = char>>) -> Vec<
         } else if c == '!' {
             comment(chars);
             linea += 1;
+            columna = 1;  // Reinicia la columna al encontrar un nuevo salto de línea.
         } else if letter(c) {
             if let Some(token) = identifier(chars, linea, columna) {
                 columna += get_token_length(&token); 
@@ -435,17 +527,38 @@ fn tokenize(chars: &mut std::iter::Peekable<impl Iterator<Item = char>>) -> Vec<
                 '}' => tokens.push(Token { tipo: TokenType::RCurly, linea, columna }),
                 ',' => tokens.push(Token { tipo: TokenType::Comma, linea, columna }),
                 ';' => tokens.push(Token { tipo: TokenType::Semicolon, linea, columna }),
+                ':' => {
+                    // Si el siguiente carácter es un '=', es un "Assign (:=)"
+                    chars.next();
+                    if let Some('=') = chars.peek() {
+                        chars.next();
+                        tokens.push(Token { tipo: TokenType::Assign, linea, columna });
+                        columna += 1; // El operador := tiene dos caracteres
+                    } else {
+                        tokens.push(Token { tipo: TokenType::Colon, linea, columna });
+                    }
+                },
                 '.' => tokens.push(Token { tipo: TokenType::Dot, linea, columna }),
-                _ => {}
+                '/' => tokens.push(Token { tipo: TokenType::Slash, linea, columna }),
+                '=' => tokens.push(Token { tipo: TokenType::Equal, linea, columna }),
+                '~' => tokens.push(Token { tipo: TokenType::Tilde, linea, columna }),
+                _ => {
+                    // Si no es un símbolo reconocido, puedes manejar el error aquí o ignorarlo
+                    // chars.next() se asegura de no quedar en un ciclo infinito
+                    chars.next();
+                    continue;
+                }
             }
+            
             // Avanza el iterador y actualiza la columna después de procesar el símbolo.
-            chars.next();
-            columna += 1;
+            chars.next();  // Avanza el carácter actual
+            columna += 1;  // Aumenta la columna después de procesar el carácter
         }
     }
 
     tokens
 }
+
 
 
 // ===============================================================================================

@@ -452,10 +452,15 @@ fn comment(chars: &mut impl Iterator<Item = char>) {
 //Devuelve la longitud del contenido del token
 fn get_token_length(token: &Token) -> usize {
     match &token.tipo {
+        // Números y caracteres individuales
         TokenType::Digit(n) => n.to_string().len(),         // Longitud del número en cadena
         TokenType::Char(c) => c.to_string().len(),          // Longitud del carácter en cadena
+        
+        // Identificadores y operadores
         TokenType::Ident(ref s) => s.len(),                 // Longitud del identificador en cadena
         TokenType::Op(ref s) => s.len(),                    // Longitud del operador en cadena
+
+        // Símbolos de un solo carácter
         TokenType::LParen | TokenType::RParen => 1,         // Paréntesis ocupan 1 carácter
         TokenType::LBracket | TokenType::RBracket => 1,     // Corchetes ocupan 1 carácter
         TokenType::LCurly | TokenType::RCurly => 1,         // Llaves ocupan 1 carácter
@@ -463,19 +468,32 @@ fn get_token_length(token: &Token) -> usize {
         TokenType::Comma => 1,                              // Coma ocupa 1 carácter
         TokenType::Dot => 1,                                // Punto ocupa 1 carácter
         TokenType::Slash => 1,                              // Diagonal ocupa 1 carácter
-        TokenType::Assign => 2,                             // Asignación ":=" ocupa 2 caracteres
         TokenType::Equal => 1,                              // Igual "=" ocupa 1 carácter
         TokenType::Tilde => 1,                              // Tilde "~" ocupa 1 carácter
 
-        // Agrega las variantes faltantes de las palabras reservadas
-        TokenType::Array | TokenType::Begin | TokenType::Const | TokenType::Do |
-        TokenType::Else | TokenType::End | TokenType::Func | TokenType::If |
-        TokenType::In | TokenType::Let | TokenType::Of | TokenType::Proc |
-        TokenType::Record | TokenType::Then | TokenType::Type | TokenType::Var |
-        TokenType::While => 1,  // Estas palabras clave son de 1 carácter de longitud
+        // Operadores multicarácter
+        TokenType::Assign => 2,                             // Asignación ":=" ocupa 2 caracteres
+
+        // Palabras reservadas (cada una tiene su longitud específica)
+        TokenType::Array => 5,      // "array" tiene 5 caracteres
+        TokenType::Begin => 5,      // "begin" tiene 5 caracteres
+        TokenType::Const => 5,      // "const" tiene 5 caracteres
+        TokenType::Do => 2,         // "do" tiene 2 caracteres
+        TokenType::Else => 4,       // "else" tiene 4 caracteres
+        TokenType::End => 3,        // "end" tiene 3 caracteres
+        TokenType::Func => 4,       // "func" tiene 4 caracteres
+        TokenType::If => 2,         // "if" tiene 2 caracteres
+        TokenType::In => 2,         // "in" tiene 2 caracteres
+        TokenType::Let => 3,        // "let" tiene 3 caracteres
+        TokenType::Of => 2,         // "of" tiene 2 caracteres
+        TokenType::Proc => 4,       // "proc" tiene 4 caracteres
+        TokenType::Record => 6,     // "record" tiene 6 caracteres
+        TokenType::Then => 4,       // "then" tiene 4 caracteres
+        TokenType::Type => 4,       // "type" tiene 4 caracteres
+        TokenType::Var => 3,        // "var" tiene 3 caracteres
+        TokenType::While => 5,      // "while" tiene 5 caracteres
     }
 }
-
 
 
 // ===============================================================================================
@@ -558,6 +576,7 @@ fn tokenize(chars: &mut std::iter::Peekable<impl Iterator<Item = char>>) -> Vec<
 
     tokens
 }
+
 
 
 

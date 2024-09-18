@@ -520,7 +520,7 @@ fn tokenize(chars: &mut std::iter::Peekable<impl Iterator<Item = char>>) -> Vec<
             }
         } else if c == '\'' {
             if let Some(token) = character(chars, linea, columna) {
-                columna += get_token_length(&token); 
+                columna += get_token_length(&token);
                 tokens.push(token);
             }
         } else {

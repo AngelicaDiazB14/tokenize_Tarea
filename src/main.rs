@@ -92,6 +92,7 @@ fn es_palabra_reservada(s: &str) -> Option<TokenType> {
         "while" => Some(TokenType::While),
         _ => None, // Si no es una palabra reservada, devuelve None
     }
+}
 
 // Implementa el trait fmt::Display para TokenType, lo que permite convertir el token
 // en una cadena formateada cuando se imprime o muestra como texto.

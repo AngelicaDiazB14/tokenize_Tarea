@@ -33,31 +33,108 @@ struct Token {
 // Define una enumeración (enum) llamada TokenType, que contiene varios tipos de tokens.
 // Cada variante de la enumeración puede almacenar diferentes tipos de datos (números, caracteres, etc.).
 enum TokenType {
-    Digit(i64),    // Representa un token numérico (almacena un número entero de 64 bits).
-    Char(char),    // Representa un token de carácter (almacena un carácter).
-    Ident(String), // Representa un identificador (almacena una cadena de texto).
-    Op(String),    // Representa un operador (almacena una cadena de texto para el operador).
-    Other(String), // Representa otros tipos de tokens (almacena una cadena para otros valores).
+    Digit(i64),
+    Char(char),
+    Ident(String),
+    Op(String),
+    Slash,         // /
+    Assign,        // :=
+    Equal,         // =
+    Tilde,         // ~
+    LParen,
+    RParen,
+    LBracket,
+    RBracket,
+    LCurly,
+    RCurly,
+    Semicolon,
+    Comma,
+    Dot,
+    Colon,
+    Array,     // Nueva variante para "array"
+    Begin,     // Nueva variante para "begin"
+    Const,     // Nueva variante para "const"
+    Do,        // Nueva variante para "do"
+    Else,      // Nueva variante para "else"
+    End,       // Nueva variante para "end"
+    Func,      // Nueva variante para "func"
+    If,        // Nueva variante para "if"
+    In,        // Nueva variante para "in"
+    Let,       // Nueva variante para "let"
+    Of,        // Nueva variante para "of"
+    Proc,      // Nueva variante para "proc"
+    Record,    // Nueva variante para "record"
+    Then,      // Nueva variante para "then"
+    Type,      // Nueva variante para "type"
+    Var,       // Nueva variante para "var"
+    While,     // Nueva variante para "while"
 }
+
+// Palabras reservadas
+fn es_palabra_reservada(s: &str) -> Option<TokenType> {
+    match s {
+        "array" => Some(TokenType::Array),
+        "begin" => Some(TokenType::Begin),
+        "const" => Some(TokenType::Const),
+        "do" => Some(TokenType::Do),
+        "else" => Some(TokenType::Else),
+        "end" => Some(TokenType::End),
+        "func" => Some(TokenType::Func),
+        "if" => Some(TokenType::If),
+        "in" => Some(TokenType::In),
+        "let" => Some(TokenType::Let),
+        "of" => Some(TokenType::Of),
+        "proc" => Some(TokenType::Proc),
+        "record" => Some(TokenType::Record),
+        "then" => Some(TokenType::Then),
+        "type" => Some(TokenType::Type),
+        "var" => Some(TokenType::Var),
+        "while" => Some(TokenType::While),
+        _ => None, // Si no es una palabra reservada, devuelve None
+    }
 
 // Implementa el trait fmt::Display para TokenType, lo que permite convertir el token
 // en una cadena formateada cuando se imprime o muestra como texto.
+// Implementa el trait fmt::Display para TokenType, lo que permite convertir el token
+// en una cadena formateada cuando se imprime o muestra como texto.
 impl fmt::Display for TokenType {
-    // Define la función 'fmt', que se llama cuando queremos mostrar el valor de TokenType.
-    // La función formatea el valor y lo escribe en 'f', que es un formateador.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        // Usa 'match' para decidir cómo formatear cada variante de TokenType.
         match self {
-            // Si el TokenType es Digit, formatea la salida como "Digit(n)", donde 'n' es el número.
             TokenType::Digit(n) => write!(f, "Digit({})", n),
-            // Si el TokenType es Char, formatea la salida como "Char(c)", donde 'c' es el carácter.
-            TokenType::Char(c) => write!(f, "Char({})", c),
-            // Si el TokenType es Ident, formatea la salida como "Ident(s)", donde 's' es la cadena.
+            TokenType::Char(c) => write!(f, "Char('{}')", c),
             TokenType::Ident(ref s) => write!(f, "Ident({})", s),
-            // Si el TokenType es Op, formatea la salida como "Op(s)", donde 's' es el operador.
-            TokenType::Op(ref s) => write!(f, "Op({})", s),
-            // Si el TokenType es Other, formatea la salida como "Other(s)", donde 's' es el valor.
-            TokenType::Other(ref s) => write!(f, "Other({})", s),
+            TokenType::Op(ref s) => write!(f, "Op('{}')", s),
+            TokenType::Slash => write!(f, "/"),
+            TokenType::Assign => write!(f, ":="),
+            TokenType::Equal => write!(f, "="),
+            TokenType::Tilde => write!(f, "~"),
+            TokenType::LParen => write!(f, "("),
+            TokenType::RParen => write!(f, ")"),
+            TokenType::LBracket => write!(f, "["),
+            TokenType::RBracket => write!(f, "]"),
+            TokenType::LCurly => write!(f, "{{"),
+            TokenType::RCurly => write!(f, "}}"),
+            TokenType::Semicolon => write!(f, ";"),
+            TokenType::Comma => write!(f, ","),
+            TokenType::Dot => write!(f, "."),
+            TokenType::Colon => write!(f, ":"),
+            TokenType::Array => write!(f, "array"),
+            TokenType::Begin => write!(f, "begin"),
+            TokenType::Const => write!(f, "const"),
+            TokenType::Do => write!(f, "do"),
+            TokenType::Else => write!(f, "else"),
+            TokenType::End => write!(f, "end"),
+            TokenType::Func => write!(f, "func"),
+            TokenType::If => write!(f, "if"),
+            TokenType::In => write!(f, "in"),
+            TokenType::Let => write!(f, "let"),
+            TokenType::Of => write!(f, "of"),
+            TokenType::Proc => write!(f, "proc"),
+            TokenType::Record => write!(f, "record"),
+            TokenType::Then => write!(f, "then"),
+            TokenType::Type => write!(f, "type"),
+            TokenType::Var => write!(f, "var"),
+            TokenType::While => write!(f, "while"),
         }
     }
 }
@@ -94,7 +171,15 @@ fn escribir_archivo(archivo_salida: &str, tokens: Vec<Token>) -> io::Result<()> 
     let mut writer = BufWriter::new(output);
 
     for token in tokens {
-        writeln!(writer, "{}:{} {:?}", token.linea, token.columna, token).map_err(|e| {
+        writeln!(
+            writer,
+            "{}:{} Token {{ tipo: {}, linea: {}, columna: {} }}",
+            token.linea,
+            token.columna,
+            token.tipo,
+            token.linea,
+            token.columna
+        ).map_err(|e| {
             eprintln!("Error al escribir en el archivo de salida: {}", e);
             e
         })?;
@@ -122,7 +207,6 @@ fn identifier(
     if let Some(&c) = chars.peek() {
         if letter(c) {
             ident_str.push(c);
-            println!("Primer carácter: {}", c); // Línea de depuración
             chars.next(); // Consume el carácter
             columna += 1;
         } else {
@@ -136,7 +220,6 @@ fn identifier(
     while let Some(&c) = chars.peek() {
         if letter(c) || digit(c) {
             ident_str.push(c);
-            println!("Carácter actual: {}", c); // Línea de depuración
             chars.next(); // Consume el carácter
             columna += 1;
         } else {
@@ -144,14 +227,23 @@ fn identifier(
         }
     }
 
-    println!("Identificador encontrado: {}", ident_str); // Línea de depuración
-    println!("comenzó en columna {}", start_columna);
+    // Verifica si el identificador es una palabra reservada
+    if let Some(reserved_type) = es_palabra_reservada(&ident_str) {
+        return Some(Token {
+            tipo: reserved_type,
+            linea,
+            columna: start_columna,
+        });
+    }
+
+    // Si no es una palabra reservada, es un identificador normal
     Some(Token {
         tipo: TokenType::Ident(ident_str),
         linea,
         columna: start_columna,
-    }) 
+    })
 }
+
 
 // ===============================================================================================
 //                                          digit
@@ -329,65 +421,6 @@ fn character(
     None
 }
 
-// ===============================================================================================
-//                                          other
-// ===============================================================================================
-// Función que reconoce otros caracteres específicos como paréntesis, puntos, comas, etc.
-// Devuelve un token correspondiente al carácter reconocido.
-fn other(chars: &mut impl Iterator<Item = char>, linea: usize, columna: usize) -> Option<Token> {
-    if let Some(c) = chars.next() {
-        match c {
-            '.' => Some(Token {
-                tipo: TokenType::Other("dot".to_string()),
-                linea,
-                columna,
-            }),
-            ',' => Some(Token {
-                tipo: TokenType::Other("comma".to_string()),
-                linea,
-                columna,
-            }),
-            ';' => Some(Token {
-                tipo: TokenType::Other("semicolon".to_string()),
-                linea,
-                columna,
-            }),
-            '(' => Some(Token {
-                tipo: TokenType::Other("lparen".to_string()),
-                linea,
-                columna,
-            }),
-            ')' => Some(Token {
-                tipo: TokenType::Other("rparen".to_string()),
-                linea,
-                columna,
-            }),
-            '[' => Some(Token {
-                tipo: TokenType::Other("lbracket".to_string()),
-                linea,
-                columna,
-            }),
-            ']' => Some(Token {
-                tipo: TokenType::Other("rbracket".to_string()),
-                linea,
-                columna,
-            }),
-            '{' => Some(Token {
-                tipo: TokenType::Other("lcurly".to_string()),
-                linea,
-                columna,
-            }),
-            '}' => Some(Token {
-                tipo: TokenType::Other("rcurly".to_string()),
-                linea,
-                columna,
-            }),
-            _ => None,
-        }
-    } else {
-        None
-    }
-}
 
 // ===============================================================================================
 //                                          comment
@@ -408,11 +441,46 @@ fn comment(chars: &mut impl Iterator<Item = char>) {
 //Devuelve la longitud del contenido del token
 fn get_token_length(token: &Token) -> usize {
     match &token.tipo {
+        // Números y caracteres individuales
         TokenType::Digit(n) => n.to_string().len(),         // Longitud del número en cadena
-        TokenType::Char(c) => c.to_string().len(),          // Longitud del carácter en cadena (si es un solo carácter)
+        TokenType::Char(c) => c.to_string().len(),          // Longitud del carácter en cadena
+        
+        // Identificadores y operadores
         TokenType::Ident(ref s) => s.len(),                 // Longitud del identificador en cadena
         TokenType::Op(ref s) => s.len(),                    // Longitud del operador en cadena
-        TokenType::Other(ref s) => s.len(),                 // Longitud del otro tipo de token en cadena
+
+        // Símbolos de un solo carácter
+        TokenType::LParen | TokenType::RParen => 1,         // Paréntesis ocupan 1 carácter
+        TokenType::LBracket | TokenType::RBracket => 1,     // Corchetes ocupan 1 carácter
+        TokenType::LCurly | TokenType::RCurly => 1,         // Llaves ocupan 1 carácter
+        TokenType::Semicolon | TokenType::Colon => 1,       // Punto y coma y dos puntos ocupan 1 carácter
+        TokenType::Comma => 1,                              // Coma ocupa 1 carácter
+        TokenType::Dot => 1,                                // Punto ocupa 1 carácter
+        TokenType::Slash => 1,                              // Diagonal ocupa 1 carácter
+        TokenType::Equal => 1,                              // Igual "=" ocupa 1 carácter
+        TokenType::Tilde => 1,                              // Tilde "~" ocupa 1 carácter
+
+        // Operadores multicarácter
+        TokenType::Assign => 2,                             // Asignación ":=" ocupa 2 caracteres
+
+        // Palabras reservadas (cada una tiene su longitud específica)
+        TokenType::Array => 5,      // "array" tiene 5 caracteres
+        TokenType::Begin => 5,      // "begin" tiene 5 caracteres
+        TokenType::Const => 5,      // "const" tiene 5 caracteres
+        TokenType::Do => 2,         // "do" tiene 2 caracteres
+        TokenType::Else => 4,       // "else" tiene 4 caracteres
+        TokenType::End => 3,        // "end" tiene 3 caracteres
+        TokenType::Func => 4,       // "func" tiene 4 caracteres
+        TokenType::If => 2,         // "if" tiene 2 caracteres
+        TokenType::In => 2,         // "in" tiene 2 caracteres
+        TokenType::Let => 3,        // "let" tiene 3 caracteres
+        TokenType::Of => 2,         // "of" tiene 2 caracteres
+        TokenType::Proc => 4,       // "proc" tiene 4 caracteres
+        TokenType::Record => 6,     // "record" tiene 6 caracteres
+        TokenType::Then => 4,       // "then" tiene 4 caracteres
+        TokenType::Type => 4,       // "type" tiene 4 caracteres
+        TokenType::Var => 3,        // "var" tiene 3 caracteres
+        TokenType::While => 5,      // "while" tiene 5 caracteres
     }
 }
 
@@ -434,11 +502,11 @@ fn tokenize(chars: &mut std::iter::Peekable<impl Iterator<Item = char>>) -> Vec<
         } else if c == '!' {
             comment(chars);
             linea += 1;
+            columna = 1;  // Reinicia la columna al encontrar un nuevo salto de línea.
         } else if letter(c) {
             if let Some(token) = identifier(chars, linea, columna) {
                 columna += get_token_length(&token); 
                 tokens.push(token);
-                
             }
         } else if digit(c) {
             if let Some(token) = number(chars, linea, columna) {
@@ -456,16 +524,47 @@ fn tokenize(chars: &mut std::iter::Peekable<impl Iterator<Item = char>>) -> Vec<
                 tokens.push(token);
             }
         } else {
-            if let Some(token) = other(chars, linea, columna) {
-                columna += get_token_length(&token); 
-                tokens.push(token);
+            // Aquí es donde manejamos los delimitadores como paréntesis, corchetes, llaves, etc.
+            match c {
+                '(' => tokens.push(Token { tipo: TokenType::LParen, linea, columna }),
+                ')' => tokens.push(Token { tipo: TokenType::RParen, linea, columna }),
+                '[' => tokens.push(Token { tipo: TokenType::LBracket, linea, columna }),
+                ']' => tokens.push(Token { tipo: TokenType::RBracket, linea, columna }),
+                '{' => tokens.push(Token { tipo: TokenType::LCurly, linea, columna }),
+                '}' => tokens.push(Token { tipo: TokenType::RCurly, linea, columna }),
+                ',' => tokens.push(Token { tipo: TokenType::Comma, linea, columna }),
+                ';' => tokens.push(Token { tipo: TokenType::Semicolon, linea, columna }),
+                ':' => {
+                    // Si el siguiente carácter es un '=', es un "Assign (:=)"
+                    chars.next();
+                    if let Some('=') = chars.peek() {
+                        chars.next();
+                        tokens.push(Token { tipo: TokenType::Assign, linea, columna });
+                        columna += 1; // El operador := tiene dos caracteres
+                    } else {
+                        tokens.push(Token { tipo: TokenType::Colon, linea, columna });
+                    }
+                },
+                '.' => tokens.push(Token { tipo: TokenType::Dot, linea, columna }),
+                '/' => tokens.push(Token { tipo: TokenType::Slash, linea, columna }),
+                '=' => tokens.push(Token { tipo: TokenType::Equal, linea, columna }),
+                '~' => tokens.push(Token { tipo: TokenType::Tilde, linea, columna }),
+                _ => {
+                    // Si no es un símbolo reconocido, puedes manejar el error aquí o ignorarlo
+                    // chars.next() se asegura de no quedar en un ciclo infinito
+                    chars.next();
+                    continue;
+                }
             }
+            
+            // Avanza el iterador y actualiza la columna después de procesar el símbolo.
+            chars.next();  // Avanza el carácter actual
+            columna += 1;  // Aumenta la columna después de procesar el carácter
         }
     }
+
     tokens
 }
-
-
 // ===============================================================================================
 //                                          main
 // ===============================================================================================

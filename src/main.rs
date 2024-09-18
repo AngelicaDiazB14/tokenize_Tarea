@@ -70,8 +70,6 @@ enum TokenType {
     While,     // Nueva variante para "while"
 }
 
-
-
 // Palabras reservadas
 fn es_palabra_reservada(s: &str) -> Option<TokenType> {
     match s {
@@ -94,8 +92,6 @@ fn es_palabra_reservada(s: &str) -> Option<TokenType> {
         "while" => Some(TokenType::While),
         _ => None, // Si no es una palabra reservada, devuelve None
     }
-}
-
 
 // Implementa el trait fmt::Display para TokenType, lo que permite convertir el token
 // en una cadena formateada cuando se imprime o muestra como texto.
@@ -142,9 +138,6 @@ impl fmt::Display for TokenType {
         }
     }
 }
-
-
-
 
 // ===============================================================================================
 //                                          leer_archivo
@@ -194,9 +187,6 @@ fn escribir_archivo(archivo_salida: &str, tokens: Vec<Token>) -> io::Result<()> 
 
     Ok(())
 }
-
-
-
 
 // ===============================================================================================
 //                                          identifier
@@ -432,7 +422,6 @@ fn character(
 }
 
 
-
 // ===============================================================================================
 //                                          comment
 // ===============================================================================================
@@ -576,10 +565,6 @@ fn tokenize(chars: &mut std::iter::Peekable<impl Iterator<Item = char>>) -> Vec<
 
     tokens
 }
-
-
-
-
 // ===============================================================================================
 //                                          main
 // ===============================================================================================

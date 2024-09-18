@@ -159,34 +159,23 @@ fn leer_archivo(archivo_entrada: &str) -> io::Result<String> {
 }
 
 // ===============================================================================================
-//                                          escribir_archivo
+//                                          imprimir_tokens
 // ===============================================================================================
-// Función que toma una lista de tokens y escribe cada uno en un archivo de salida.
-// Recibe el nombre del archivo de salida y la lista de tokens como parámetros.
-fn escribir_archivo(archivo_salida: &str, tokens: Vec<Token>) -> io::Result<()> {
-    let output = File::create(archivo_salida).map_err(|e| {
-        eprintln!("Error al crear el archivo de salida: {}", e);
-        e
-    })?;
-    let mut writer = BufWriter::new(output);
-
+// Función que toma una lista de tokens y los imprime en consola.
+// Recibe la lista de tokens como parámetro.
+fn imprimir_tokens(tokens: Vec<Token>) {
     for token in tokens {
-        writeln!(
-            writer,
+        println!(
             "{}:{} Token {{ tipo: {}, linea: {}, columna: {} }}",
             token.linea,
             token.columna,
             token.tipo,
             token.linea,
             token.columna
-        ).map_err(|e| {
-            eprintln!("Error al escribir en el archivo de salida: {}", e);
-            e
-        })?;
+        );
     }
-
-    Ok(())
 }
+
 
 // ===============================================================================================
 //                                          identifier
@@ -573,20 +562,13 @@ fn tokenize(chars: &mut std::iter::Peekable<impl Iterator<Item = char>>) -> Vec<
 // de salida tokens.out o el especificado por el usuario.
 fn main() -> io::Result<()> {
     let args: Vec<String> = env::args().collect();
-    let mut output_file = "output.tok".to_string();
 
-    if args.len() < 2 || args.len() > 4 {
-        eprintln!("Uso: {} <archivo_entrada> [-o <archivo_salida>]", args[0]);
+    if args.len() < 2 {
+        eprintln!("Uso: {} <archivo_entrada>", args[0]);
         std::process::exit(1);
     }
 
     let input_file = &args[1];
-
-    if args.len() == 4 && args[2] == "-o" {
-        output_file = args[3].clone();
-    } else if args.len() == 3 {
-        output_file = args[2].clone();
-    }
 
     // Llamada a la función para leer el archivo
     let buffer = leer_archivo(input_file)?;
@@ -594,8 +576,8 @@ fn main() -> io::Result<()> {
     // Tokenización
     let tokens = tokenize(&mut buffer.chars().peekable());
 
-    // Llamada a la función para escribir los tokens en el archivo de salida
-    escribir_archivo(&output_file, tokens)?;
+    // Imprimir los tokens en consola
+    imprimir_tokens(tokens);
 
     Ok(())
 }

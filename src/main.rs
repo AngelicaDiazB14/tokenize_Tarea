@@ -9,6 +9,8 @@
 // línea y columna del archivo fuente en que fue encontrado.                                     .
 // ...............................................................................................
 
+mod parse;
+
 use std::env;
 use std::fmt;
 use std::fs::File;

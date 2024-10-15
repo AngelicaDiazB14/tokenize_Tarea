@@ -4,3 +4,16 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+petgraph = "0.6.5"
+
+[[bin]]
+name = "main"
+path = "src/main.rs"
+
+[[bin]]
+name = "parse"
+path = "src/parse.rs"
+
+[[bin]]
+name = "pare"
+path = "src/pare.rs"

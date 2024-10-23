@@ -5,6 +5,9 @@ edition = "2021"
 
 [dependencies]
 petgraph = "0.6.5"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
 
 [[bin]]
 name = "main"
@@ -17,3 +20,7 @@ path = "src/parse.rs"
 [[bin]]
 name = "pare"
 path = "src/pare.rs"
+
+[[bin]]
+name = "token"
+path = "src/token.rs"

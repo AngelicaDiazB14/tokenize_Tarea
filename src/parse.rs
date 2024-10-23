@@ -7,6 +7,11 @@ use std::env;
 use std::fs::File;
 use std::io::{self, BufReader, Write};
 
+use serde::{Serialize, Deserialize};
+use serde_json;
+
+
+
 struct ParseError {
     message: String,
 }
@@ -139,7 +144,7 @@ fn format_tree(node: &TreeNode, depth: usize) -> String {
     }
     tree_str
 }
-
+/*
 fn main() {
     let args: Vec<String> = env::args().collect();
     let mut output_file = "tree.out";  // Archivo de salida predeterminado
@@ -179,4 +184,95 @@ fn main() {
             std::process::exit(1);
         }
     }
+}
+*/
+
+
+
+
+
+
+
+
+// -------------------------------------- TOKEN -------------------------------------- //
+
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct Token {
+    tipo: String,
+    children: Vec<Token>,
+}
+
+impl Token {
+    // Constructor for creating a new Token
+    fn new(tipo: String, children: Vec<Token>) -> Self {
+        Token { tipo, children }
+    }
+
+    // Method to add a child token to the list of children
+    fn add_child(&mut self, child: Token) {
+        self.children.push(child);
+    }
+
+    // Method to convert the token to JSON format
+    fn to_json(&self) -> String {
+        serde_json::to_string_pretty(&self).unwrap()
+    }
+
+    // Recursive method to generate DOT representation
+    fn to_dot(&self, parent: Option<&str>, dot_output: &mut String) {
+        let node_name = format!("\"{}\"", self.tipo);
+        if let Some(parent_name) = parent {
+            dot_output.push_str(&format!("  \"{}\" -> {};\n", parent_name, node_name));
+        }
+        for child in &self.children {
+            child.to_dot(Some(&self.tipo), dot_output);
+        }
+    }
+
+}
+
+
+// -------------------------------------- TOKEN -------------------------------------- //
+
+
+fn main() {
+    // Create a more complex token structure
+    let leaf_token_1 = Token::new(String::from("Leaf 1"), vec![]);
+    let leaf_token_2 = Token::new(String::from("Leaf 2"), vec![]);
+    let leaf_token_3 = Token::new(String::from("Leaf 3"), vec![]);
+    let leaf_token_4 = Token::new(String::from("Leaf 4"), vec![]);
+    let leaf_token_5 = Token::new(String::from("Leaf 5"), vec![]);
+
+    // Create intermediate tokens with children
+    let mut mid_token_1 = Token::new(String::from("Mid 1"), vec![]);
+    mid_token_1.add_child(leaf_token_1);
+    mid_token_1.add_child(leaf_token_2);
+
+    let mut mid_token_2 = Token::new(String::from("Mid 2"), vec![]);
+    mid_token_2.add_child(leaf_token_3);
+
+    let mut mid_token_3 = Token::new(String::from("Mid 3"), vec![]);
+    mid_token_3.add_child(leaf_token_4);
+    mid_token_3.add_child(leaf_token_5);
+
+    // Create the root token with multiple children
+    let mut root_token = Token::new(String::from("Root"), vec![]);
+    root_token.add_child(mid_token_1);
+    root_token.add_child(mid_token_2);
+    root_token.add_child(mid_token_3);
+
+
+    // Convert the token to JSON format
+    let json_representation = root_token.to_json();
+    println!("JSON format:\n{}", json_representation);
+
+
+    // Generate the DOT representation
+    let mut dot_output = String::from("digraph TokenTree {\n");
+    root_token.to_dot(None, &mut dot_output);
+    dot_output.push_str("}\n");
+
+    // Print the DOT representation
+    println!("DOT format:\n{}", dot_output);
 }

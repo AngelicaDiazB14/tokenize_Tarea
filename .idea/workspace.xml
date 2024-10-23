@@ -8,16 +8,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bcd2f0c5-1dc0-43b6-b654-05866347903a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pare.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/parse.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Punto2" beforeDir="false" afterPath="$PROJECT_DIR$/Punto2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Punto2/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/Punto2/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output.tok" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/arbol.out" beforeDir="false" afterPath="$PROJECT_DIR$/arbol.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parse.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parse.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,6 +45,9 @@
   <component name="MacroExpansionManager">
     <option name="directoryName" value="25e92v14" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -58,33 +56,93 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Cargo.Run tokenize.executor&quot;: &quot;Debug&quot;,
-    &quot;Cargo.RunTest.executor&quot;: &quot;Debug&quot;,
-    &quot;Cargo.Test tokenize.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
-    &quot;org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon&quot;: &quot;&quot;,
-    &quot;org.rust.disableDetachedFileInspectionC:/Users/Bafa4/OneDrive - Estudiantes ITCR/TEC/2024/IIS/Compiladores/Tareas_Programadas/tokenize_Tarea/src/pare.rs&quot;: &quot;true&quot;,
-    &quot;org.rust.first.attach.projects&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Cargo.Run main.executor": "Run",
+    "Cargo.Run parse.executor": "Run",
+    "Cargo.Run token.executor": "Run",
+    "Cargo.Run tokenize.executor": "Debug",
+    "Cargo.RunTest.executor": "Debug",
+    "Cargo.Test tokenize.executor": "Debug",
+    "Cargo.clean.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.rust.reset.selective.auto.import": "true",
+    "git-widget-placeholder": "David",
+    "last_opened_file_path": "C:/GitHub/tokenize_Tarea/src",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+    "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
+    "org.rust.disableDetachedFileInspectionC:/Users/Bafa4/OneDrive - Estudiantes ITCR/TEC/2024/IIS/Compiladores/Tareas_Programadas/tokenize_Tarea/src/pare.rs": "true",
+    "org.rust.first.attach.projects": "true",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\GitHub\tokenize_Tarea\src" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Bafa4\OneDrive - Estudiantes ITCR\TEC\2024\IIS\Compiladores\Tareas_Programadas\tokenize_Tarea" />
     </key>
   </component>
-  <component name="RunManager" selected="Cargo.RunTest">
+  <component name="RunManager" selected="Cargo.Run parse">
+    <configuration name="Run main" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="run --package tokenize --bin main" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run parse" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="run --package tokenize --bin parse" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run token" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="run --package tokenize --bin token" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Run tokenize" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
       <option name="buildProfileId" value="dev" />
       <option name="command" value="run --package tokenize --bin tokenize" />
@@ -143,7 +201,17 @@
       <item itemvalue="Cargo.Run tokenize" />
       <item itemvalue="Cargo.RunTest" />
       <item itemvalue="Cargo.Test tokenize" />
+      <item itemvalue="Cargo.Run main" />
+      <item itemvalue="Cargo.Run parse" />
+      <item itemvalue="Cargo.Run token" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Cargo.Run parse" />
+        <item itemvalue="Cargo.Run token" />
+        <item itemvalue="Cargo.Run main" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="RustProjectSettings">
     <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
@@ -166,6 +234,7 @@
       <workItem from="1728673142559" duration="297000" />
       <workItem from="1728789004244" duration="1517000" />
       <workItem from="1728955189183" duration="2720000" />
+      <workItem from="1729446081104" duration="13431000" />
     </task>
     <servers />
   </component>

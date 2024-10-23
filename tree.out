@@ -3,59 +3,94 @@ Root
     Statement
   const
     Statement
-  shift
+  ident("shift")
   ~
-    Operator
-  ord('a')
-    FunctionCall
-  -
-    Operator
-  ord('A')
-    FunctionCall
+  ident("ord")
+  (
+  char(c)
+    Value
+  )
+  Op('-')
+  ident("ord")
+  (
+  char(B)
+    Value
+  )
   ;
-    Operator
   var
     Statement
-  i
+  ident("i")
   :
-    Operator
-  integer
+  ident("integer")
   ;
-    Operator
   func
     Statement
-  capital
+  ident("capital")
   (
-    Operator
   var
     Statement
-  chr
+  ident("chr")
   :
-    Operator
-  Char
+  ident("Char")
   )
-    Operator
   :
-    Operator
-  Boolean
+  ident("Boolean")
   ~
-    Operator
-  (ord('A') <= ord(ch))
-  /\
-  (ord(ch) <= ord('Z'))
+  (
+  ident("ord")
+  (
+  char(A)
+    Value
+  )
+  Op('<=')
+  ident("ord")
+  (
+  ident("ch")
+  )
+  )
+  Op('/\\')
+  (
+  ident("ord")
+  (
+  ident("ch")
+  )
+  Op('<=')
+  ident("ord")
+  (
+  char(Z)
+    Value
+  )
+  )
   in
-    Statement
-  15
-  !
-    Operator
-  hola
+  begin
+  ident("a")
+  :=
+  ident("a")
+  Op('+')
+  num(1)
+    Value
   if
     Statement
-  capital(current)
+  ident("capital")
+  (
+  ident("current")
+  )
   then
     Statement
-  chr(ord(current) + shift)
+  ident("chr")
+  (
+  ident("ord")
+  (
+  ident("current")
+  )
+  Op('+')
+  ident("shift")
+  )
   else
     Statement
-  current
+  ident("current")
+  :=
+  num(69)
+    Value
+  end
 

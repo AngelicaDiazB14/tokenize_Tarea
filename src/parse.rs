@@ -1,20 +1,65 @@
-
-//================================================================================================
-//                                          parse
-//================================================================================================
-
 use std::env;
 use std::fs::File;
-use std::io::{self, BufReader, Write};
+use std::io::{BufRead, BufReader, Write};
+use regex::Regex;
 
-struct ParseError {
-    message: String,
+// Estructura para almacenar un token
+enum Token {
+    Ident(String),
+    Char(u8),
+    Num(String),
+    PalabraReservada(String),
 }
 
-impl ParseError {
-    fn new(msg: &str) -> ParseError {
-        ParseError { message: msg.to_string() }
+impl std::fmt::Display for Token {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Token::Ident(nombre) => write!(f, "ident(\"{}\")", nombre),
+            Token::Char(valor) => write!(f, "char({})", *valor as char),
+            Token::Num(valor) => write!(f, "num({})", valor),
+            Token::PalabraReservada(valor) => write!(f, "{}", valor),
+        }
     }
+}
+
+// Función para tokenizar una línea
+fn tokenizar_linea(linea: &str) -> Vec<Token> {
+    let mut tokens = Vec::new();
+    let re = Regex::new(r"tipo:\s*([^,]+)").unwrap();
+
+    // Captura de tokens en el formato esperado
+    if let Some(captura) = re.captures(linea) {
+        let valor = captura.get(1).unwrap().as_str().trim();
+
+        if valor.starts_with("Ident(") {
+            let nombre_ident = &valor[6..valor.len() - 1];
+            tokens.push(Token::Ident(nombre_ident.to_string()));
+        } else if valor.starts_with("Char(") {
+            let char_value = &valor[6..valor.len() - 1];
+            tokens.push(Token::Char(char_value.chars().next().unwrap() as u8));
+        } else if valor.starts_with("Digit(") {
+            let digit_value = &valor[6..valor.len() - 1];
+            tokens.push(Token::Num(digit_value.to_string()));
+        } else {
+            tokens.push(Token::PalabraReservada(valor.to_string()));
+        }
+    }
+
+    tokens
+}
+
+// Función para leer un archivo y tokenizar su contenido
+fn leer_archivo_y_tokenizar(archivo: &str) -> Vec<Token> {
+    let mut tokens = Vec::new();
+    let file = File::open(archivo).unwrap();
+    let reader = BufReader::new(file);
+
+    for linea in reader.lines() {
+        let linea = linea.unwrap();
+        tokens.extend(tokenizar_linea(&linea));
+    }
+
+    tokens
 }
 
 // Definición de nodos del árbol
@@ -38,9 +83,9 @@ impl TreeNode {
 }
 
 // Función para construir el árbol de parsing
-fn build_parse_tree(tokens: Vec<String>) -> Result<TreeNode, ParseError> {
+fn build_parse_tree(tokens: Vec<Token>) -> Result<TreeNode, String> {
     if tokens.is_empty() {
-        return Err(ParseError::new("No tokens found"));
+        return Err("No tokens found".to_string());
     }
 
     // Nodo raíz del árbol
@@ -48,25 +93,21 @@ fn build_parse_tree(tokens: Vec<String>) -> Result<TreeNode, ParseError> {
 
     // Lógica de construcción del árbol (basada en tokens)
     for token in tokens {
-        match token.as_str() {
-            "let" | "const" | "var" | "func" | "in" | "if" | "then" | "else" => {
-                let mut node = TreeNode::new(&token);
+        let token_str = format!("{}", token); // Convertir el token a cadena
+        match token {
+            Token::PalabraReservada(ref palabra) if palabra == "let" || palabra == "const" || palabra == "var" || palabra == "func" || palabra == "if" || palabra == "then" || palabra == "else" => {
+                let mut node = TreeNode::new(&token_str);
                 node.add_child(TreeNode::new("Statement"));
                 root.add_child(node);
             }
-            "ord('a')" | "ord('A')" => {
-                let mut node = TreeNode::new(&token);
-                node.add_child(TreeNode::new("FunctionCall"));
-                root.add_child(node);
-            }
-            "~" | "-" | ":" | ";" | "!" | "(" | ")" => {
-                let mut node = TreeNode::new(&token);
-                node.add_child(TreeNode::new("Operator"));
+            Token::Char(_) | Token::Num(_) => {
+                let mut node = TreeNode::new(&token_str);
+                node.add_child(TreeNode::new("Value"));
                 root.add_child(node);
             }
             _ => {
-                // Para cualquier token que no sea una palabra clave o símbolo, asumimos que es un valor
-                let node = TreeNode::new(&token);
+                // Para cualquier otro token, asumimos que es un identificador
+                let node = TreeNode::new(&token_str);
                 root.add_child(node);
             }
         }
@@ -75,57 +116,8 @@ fn build_parse_tree(tokens: Vec<String>) -> Result<TreeNode, ParseError> {
     Ok(root)
 }
 
-// leer los tokens desde el archivo especificado por argumento
-fn parse_tokens(file_path: &str) -> Result<Vec<String>, ParseError> {
-    let file = File::open(file_path).map_err(|_| ParseError::new("Error al abrir el archivo de tokens"))?;
-    let _reader = BufReader::new(file);
-
-    //revisar, deberia ser los valores de los token que sacamos de main
-    let tokens = vec![
-        "let".to_string(),
-        "const".to_string(),
-        "shift".to_string(),
-        "~".to_string(),
-        "ord('a')".to_string(),
-        "-".to_string(),
-        "ord('A')".to_string(),
-        ";".to_string(),
-        "var".to_string(),
-        "i".to_string(),
-        ":".to_string(),
-        "integer".to_string(),
-        ";".to_string(),
-        "func".to_string(),
-        "capital".to_string(),
-        "(".to_string(),
-        "var".to_string(),
-        "chr".to_string(),
-        ":".to_string(),
-        "Char".to_string(),
-        ")".to_string(),
-        ":".to_string(),
-        "Boolean".to_string(),
-        "~".to_string(),
-        "(ord('A') <= ord(ch))".to_string(),
-        "/\\".to_string(),
-        "(ord(ch) <= ord('Z'))".to_string(),
-        "in".to_string(),
-        "15".to_string(),
-        "!".to_string(),
-        "hola".to_string(),
-        "if".to_string(),
-        "capital(current)".to_string(),
-        "then".to_string(),
-        "chr(ord(current) + shift)".to_string(),
-        "else".to_string(),
-        "current".to_string(),
-    ];
-
-    Ok(tokens)
-}
-
 // Función para escribir la estructura del árbol en un archivo
-fn write_tree_output(output_path: &str, root: &TreeNode) -> Result<(), io::Error> {
+fn write_tree_output(output_path: &str, root: &TreeNode) -> Result<(), std::io::Error> {
     let mut output_file = File::create(output_path)?;
     writeln!(output_file, "{}", format_tree(root, 0))?;
     Ok(())
@@ -142,41 +134,43 @@ fn format_tree(node: &TreeNode, depth: usize) -> String {
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let mut output_file = "tree.out";  // Archivo de salida predeterminado
 
     if args.len() < 2 {
-        eprintln!("Error: No input file provided.");
+        eprintln!("Error: falta el nombre del archivo de entrada");
         std::process::exit(1);
     }
 
-    let input_file = &args[1];
+    let archivo = &args[1];
+    let tokens = leer_archivo_y_tokenizar(archivo);
 
-    // Verifica si se ha proporcionado un archivo de salida con la directiva -o
-    if args.len() > 3 && args[2] == "-o" {
-        output_file = &args[3];
+    //let salida: Box<dyn Write> = Box::new(stdout());
+
+    if args.len() > 2 && args[2] == "-o" {
+        if args.len() < 4 {
+            eprintln!("Error: falta el nombre del archivo de salida");
+            std::process::exit(1);
+        }
+
+        //let archivo_salida = &args[3];
+        //let file = File::create(archivo_salida).unwrap();
+        //salida = Box::new(file);
     }
 
-    // Intenta parsear los tokens del archivo de entrada
-    match parse_tokens(input_file) {
-        Ok(tokens) => {
-            // Construye el árbol de parsing
-            match build_parse_tree(tokens) {
-                Ok(tree) => {
-                    // Escribe la estructura del árbol en el archivo de salida
-                    if let Err(e) = write_tree_output(output_file, &tree) {
-                        eprintln!("Error al escribir en el archivo de salida: {}", e);
-                        std::process::exit(1);
-                    }
-                }
-                Err(e) => {
-                    eprintln!("Error al construir el árbol de parsing: {}", e.message);
-                    std::process::exit(1);
-                }
+    // Construir el árbol de parsing
+    match build_parse_tree(tokens) {
+        Ok(tree) => {
+            // Escribir la estructura del árbol en el archivo de salida
+            if let Err(e) = write_tree_output(&args[3], &tree) {
+                eprintln!("Error al escribir en el archivo de salida: {}", e);
+                std::process::exit(1);
             }
         }
         Err(e) => {
-            eprintln!("Error al leer tokens: {}", e.message);
+            eprintln!("Error al construir el árbol de parsing: {}", e);
             std::process::exit(1);
         }
     }
 }
+
+
+

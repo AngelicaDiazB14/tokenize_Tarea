@@ -1,13 +1,15 @@
 let
-   const shift ~ ord('a') - ord('A');
+   const shift ~ ord('a') - ord('B');
    var i : integer;
-   func capital (var chr : Char) : Boolean ~ 
-       (ord('A') <= ord(ch)) 
-         /\ (ord(ch) <= ord('Z'))
+   func capital (var chr : Char) : Boolean ~
+       (ord('A') <= ord(ch))
+         /\\ (ord(ch) <= ord('Z'))
 in
-15
 ! hola
+  begin
+   a := a + 1;
    if capital(current) ! hola
-   then 
+   then
    chr(ord(current) + shift)
-   else current
+   else current := 3
+  end

@@ -1,5 +1,5 @@
 let
-   const shift ~ ord('a') - ord('B');
+   const shift ~ ord('a') - ord('A');
    var i : integer;
    func capital (var chr : Char) : Boolean ~
        (ord('A') <= ord(ch))

@@ -17,5 +17,9 @@ name = "parse"
 path = "src/parse.rs"
 
 [[bin]]
+name = "parse2"
+path = "src/parse2.rs"
+
+[[bin]]
 name = "pare"
 path = "src/pare.rs"

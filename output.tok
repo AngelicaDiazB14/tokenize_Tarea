@@ -1,80 +1,82 @@
-1:1 Token { tipo: let, linea: 1, columna: 1 }
-2:4 Token { tipo: const, linea: 2, columna: 4 }
-2:10 Token { tipo: Ident(shift), linea: 2, columna: 10 }
-2:16 Token { tipo: ~, linea: 2, columna: 16 }
-2:18 Token { tipo: Ident(ord), linea: 2, columna: 18 }
-2:21 Token { tipo: (, linea: 2, columna: 21 }
-2:22 Token { tipo: Char('c'), linea: 2, columna: 22 }
-2:23 Token { tipo: ), linea: 2, columna: 23 }
-2:25 Token { tipo: Op('-'), linea: 2, columna: 25 }
-2:26 Token { tipo: Ident(ord), linea: 2, columna: 26 }
-2:29 Token { tipo: (, linea: 2, columna: 29 }
-2:30 Token { tipo: Char('B'), linea: 2, columna: 30 }
-2:31 Token { tipo: ), linea: 2, columna: 31 }
-2:32 Token { tipo: ;, linea: 2, columna: 32 }
-3:4 Token { tipo: var, linea: 3, columna: 4 }
-3:8 Token { tipo: Ident(i), linea: 3, columna: 8 }
-3:10 Token { tipo: :, linea: 3, columna: 10 }
-3:11 Token { tipo: Ident(integer), linea: 3, columna: 11 }
-3:18 Token { tipo: ;, linea: 3, columna: 18 }
-4:4 Token { tipo: func, linea: 4, columna: 4 }
-4:9 Token { tipo: Ident(capital), linea: 4, columna: 9 }
-4:17 Token { tipo: (, linea: 4, columna: 17 }
-4:18 Token { tipo: var, linea: 4, columna: 18 }
-4:22 Token { tipo: Ident(chr), linea: 4, columna: 22 }
-4:26 Token { tipo: :, linea: 4, columna: 26 }
-4:27 Token { tipo: Ident(Char), linea: 4, columna: 27 }
-4:31 Token { tipo: ), linea: 4, columna: 31 }
-4:33 Token { tipo: :, linea: 4, columna: 33 }
-4:34 Token { tipo: Ident(Boolean), linea: 4, columna: 34 }
-4:42 Token { tipo: ~, linea: 4, columna: 42 }
-5:8 Token { tipo: (, linea: 5, columna: 8 }
-5:9 Token { tipo: Ident(ord), linea: 5, columna: 9 }
-5:12 Token { tipo: (, linea: 5, columna: 12 }
-5:13 Token { tipo: Char('A'), linea: 5, columna: 13 }
-5:14 Token { tipo: ), linea: 5, columna: 14 }
-5:16 Token { tipo: Op('<='), linea: 5, columna: 16 }
-5:18 Token { tipo: Ident(ord), linea: 5, columna: 18 }
-5:21 Token { tipo: (, linea: 5, columna: 21 }
-5:22 Token { tipo: Ident(ch), linea: 5, columna: 22 }
-5:24 Token { tipo: ), linea: 5, columna: 24 }
-5:25 Token { tipo: ), linea: 5, columna: 25 }
-6:10 Token { tipo: Op('/\\'), linea: 6, columna: 10 }
-6:13 Token { tipo: (, linea: 6, columna: 13 }
-6:14 Token { tipo: Ident(ord), linea: 6, columna: 14 }
-6:17 Token { tipo: (, linea: 6, columna: 17 }
-6:18 Token { tipo: Ident(ch), linea: 6, columna: 18 }
-6:20 Token { tipo: ), linea: 6, columna: 20 }
-6:22 Token { tipo: Op('<='), linea: 6, columna: 22 }
-6:24 Token { tipo: Ident(ord), linea: 6, columna: 24 }
-6:27 Token { tipo: (, linea: 6, columna: 27 }
-6:28 Token { tipo: Char('Z'), linea: 6, columna: 28 }
-6:29 Token { tipo: ), linea: 6, columna: 29 }
-6:30 Token { tipo: ), linea: 6, columna: 30 }
-7:1 Token { tipo: in, linea: 7, columna: 1 }
-9:3 Token { tipo: begin, linea: 9, columna: 3 }
-10:4 Token { tipo: Ident(a), linea: 10, columna: 4 }
-10:6 Token { tipo: :=, linea: 10, columna: 6 }
-10:8 Token { tipo: Ident(a), linea: 10, columna: 8 }
-10:10 Token { tipo: Op('+'), linea: 10, columna: 10 }
-10:11 Token { tipo: Digit(1), linea: 10, columna: 11 }
-11:4 Token { tipo: if, linea: 11, columna: 4 }
-11:7 Token { tipo: Ident(capital), linea: 11, columna: 7 }
-11:14 Token { tipo: (, linea: 11, columna: 14 }
-11:15 Token { tipo: Ident(current), linea: 11, columna: 15 }
-11:22 Token { tipo: ), linea: 11, columna: 22 }
-12:4 Token { tipo: then, linea: 12, columna: 4 }
-13:4 Token { tipo: Ident(chr), linea: 13, columna: 4 }
-13:7 Token { tipo: (, linea: 13, columna: 7 }
-13:8 Token { tipo: Ident(ord), linea: 13, columna: 8 }
-13:11 Token { tipo: (, linea: 13, columna: 11 }
-13:12 Token { tipo: Ident(current), linea: 13, columna: 12 }
-13:19 Token { tipo: ), linea: 13, columna: 19 }
-13:21 Token { tipo: Op('+'), linea: 13, columna: 21 }
-13:22 Token { tipo: Ident(shift), linea: 13, columna: 22 }
-13:27 Token { tipo: ), linea: 13, columna: 27 }
-14:4 Token { tipo: else, linea: 14, columna: 4 }
-14:9 Token { tipo: Ident(current), linea: 14, columna: 9 }
-14:17 Token { tipo: :=, linea: 14, columna: 17 }
-14:19 Token { tipo: Digit(69), linea: 14, columna: 19 }
-15:3 Token { tipo: end, linea: 15, columna: 73}
+{Let, 'let', 2, 1}
+{Const, 'const', 2, 4}
+{Identifier, 'shift', 2, 10}
+{Tilde, '~', 2, 16}
+{Identifier, 'ord', 2, 18}
+{LeftParen, '(', 2, 21}
+{CharLiteral, 'a', 2, 22}
+{RightParen, ')', 2, 25}
+{Operator, '-', 2, 27}
+{Identifier, 'ord', 2, 29}
+{LeftParen, '(', 2, 32}
+{CharLiteral, 'A', 2, 33}
+{RightParen, ')', 2, 36}
+{Semicolon, ';', 2, 37}
+{Var, 'var', 3, 4}
+{Identifier, 'i', 3, 8}
+{Colon, ':', 3, 10}
+{Identifier, 'integer', 3, 12}
+{Semicolon, ';', 3, 19}
+{Func, 'func', 4, 4}
+{Identifier, 'capital', 4, 9}
+{LeftParen, '(', 4, 17}
+{Var, 'var', 4, 18}
+{Identifier, 'chr', 4, 22}
+{Colon, ':', 4, 26}
+{Identifier, 'Char', 4, 28}
+{RightParen, ')', 4, 32}
+{Colon, ':', 4, 34}
+{Identifier, 'Boolean', 4, 36}
+{Tilde, '~', 4, 44}
+{LeftParen, '(', 5, 8}
+{Identifier, 'ord', 5, 9}
+{LeftParen, '(', 5, 12}
+{CharLiteral, 'A', 5, 13}
+{RightParen, ')', 5, 16}
+{Operator, '<=', 5, 18}
+{Identifier, 'ord', 5, 21}
+{LeftParen, '(', 5, 24}
+{Identifier, 'ch', 5, 25}
+{RightParen, ')', 5, 27}
+{RightParen, ')', 5, 28}
+{Operator, '/\\', 6, 10}
+{LeftParen, '(', 6, 14}
+{Identifier, 'ord', 6, 15}
+{LeftParen, '(', 6, 18}
+{Identifier, 'ch', 6, 19}
+{RightParen, ')', 6, 21}
+{Operator, '<=', 6, 23}
+{Identifier, 'ord', 6, 26}
+{LeftParen, '(', 6, 29}
+{CharLiteral, 'Z', 6, 30}
+{RightParen, ')', 6, 33}
+{RightParen, ')', 6, 34}
+{In, 'in', 8, 1}
+{Begin, 'begin', 10, 3}
+{Identifier, 'a', 10, 4}
+{Assign, ':=', 10, 6}
+{Identifier, 'a', 10, 9}
+{Operator, '+', 10, 11}
+{IntegerLiteral, '1', 10, 13}
+{Semicolon, ';', 10, 14}
+{If, 'if', 11, 4}
+{Identifier, 'capital', 11, 7}
+{LeftParen, '(', 11, 14}
+{Identifier, 'current', 11, 15}
+{RightParen, ')', 11, 22}
+{Then, 'then', 13, 4}
+{Identifier, 'chr', 13, 4}
+{LeftParen, '(', 13, 7}
+{Identifier, 'ord', 13, 8}
+{LeftParen, '(', 13, 11}
+{Identifier, 'current', 13, 12}
+{RightParen, ')', 13, 19}
+{Operator, '+', 13, 21}
+{Identifier, 'shift', 13, 23}
+{RightParen, ')', 13, 28}
+{Else, 'else', 14, 4}
+{Identifier, 'current', 14, 9}
+{Assign, ':=', 14, 17}
+{IntegerLiteral, '3', 15, 20}
+{End, 'end', 15, 3}
+{EOF, '', 15, 6}

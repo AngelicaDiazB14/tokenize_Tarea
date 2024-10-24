@@ -1,96 +1,53 @@
-Root
-  let
-    Statement
-  const
-    Statement
-  ident("shift")
-  ~
-  ident("ord")
-  (
-  char(c)
-    Value
-  )
-  Op('-')
-  ident("ord")
-  (
-  char(B)
-    Value
-  )
-  ;
-  var
-    Statement
-  ident("i")
-  :
-  ident("integer")
-  ;
-  func
-    Statement
-  ident("capital")
-  (
-  var
-    Statement
-  ident("chr")
-  :
-  ident("Char")
-  )
-  :
-  ident("Boolean")
-  ~
-  (
-  ident("ord")
-  (
-  char(A)
-    Value
-  )
-  Op('<=')
-  ident("ord")
-  (
-  ident("ch")
-  )
-  )
-  Op('/\\')
-  (
-  ident("ord")
-  (
-  ident("ch")
-  )
-  Op('<=')
-  ident("ord")
-  (
-  char(Z)
-    Value
-  )
-  )
-  in
-  begin
-  ident("a")
-  :=
-  ident("a")
-  Op('+')
-  num(1)
-    Value
-  if
-    Statement
-  ident("capital")
-  (
-  ident("current")
-  )
-  then
-    Statement
-  ident("chr")
-  (
-  ident("ord")
-  (
-  ident("current")
-  )
-  Op('+')
-  ident("shift")
-  )
-  else
-    Statement
-  ident("current")
-  :=
-  num(69)
-    Value
-  end
-
+let(
+   declaration(
+   [const(
+   name("shift"),
+   value(
+      op(
+   -,
+   call("ord",params([char(97)])),
+   call("ord",params([char(65)]))
+)
+   )
+),
+   var(name("i"),typeName("integer")),
+   func(
+   name("capital"),
+   params([var(name("chr"),typeName("Char"))]),
+   type(typeName("Boolean")),
+   result(
+      op(
+   /\\,
+   op(
+   <=,
+   call("ord",params([char(65)])),
+   call("ord",params([ref(["ch"])]))
+),
+   op(
+   <=,
+   call("ord",params([ref(["ch"])])),
+   call("ord",params([char(90)]))
+)
+)
+   )
+)]
+),
+   command(
+   [assign(["a"], op(
+   +,
+   ref(["a"]),
+   num(1)
+)),
+   ifCmd(
+   cond(call("capital",params([ref(["current"])]))),
+   then(
+      call("chr",params([op(
+   +,
+   call("ord",params([ref(["current"])])),
+   ref(["shift"])
+)]))
+   ),
+   else(assign(["current"], num(3)))
+)]
+)
+)

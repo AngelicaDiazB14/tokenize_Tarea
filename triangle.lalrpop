@@ -1,0 +1,117 @@
+grammar;
+
+// Identificadores
+Identifier: () = {
+    r"[a-zA-Z_][a-zA-Z0-9_]*"
+};
+
+// Literales de enteros
+Integer_Literal: () = {
+    r"[0-9]+"
+};
+
+
+// Expresión primaria
+primary_Expression: () = {
+    Integer_Literal
+};
+
+// Expresión secundaria
+second_Expression: () = {
+    primary_Expression
+};
+
+// Expresión general
+Expression: () = {
+    second_Expression
+};
+
+
+// Parámetro actual
+Actual_Parameter: () = {
+    Expression
+};
+
+// Secuencia de parámetros actuales propiamente dicha
+proper_AP_Sequence: () = {
+    Actual_Parameter, ("," Actual_Parameter)* => ()
+};
+
+// Secuencia de parámetros actuales
+Actual_Param_Seq: () = {
+    proper_AP_Sequence?
+};
+
+// Nombre de variable
+V_name: () = {
+    Identifier, V_name_suffix* => ()
+};
+
+// Sufijos de V_name
+V_name_suffix: () = {
+    ".", Identifier => (),
+    "[", Expression, "]" => ()
+};
+
+
+
+// Declaración simple
+single_Declaration: () = {
+    "const", Identifier, ":=", Expression => ()
+};
+
+// Declaración general
+Declaration: () = {
+    single_Declaration, (";" single_Declaration)* => ()
+};
+
+
+
+// Comando simple
+single_Command: () = {
+    V_name, ":=", Expression => (),
+    Identifier, Actual_Param_Seq => (),
+    "let", Declaration, "in", single_Command => ()
+};
+
+// Comandos generales
+Command: () = {
+    single_Command, (";" single_Command)* => ()
+};
+
+// Agregado de registros
+record_Aggregate: () = {
+    Identifier, ":", Expression, ("," Identifier ":" Expression)* => ()
+};
+
+// Agregado de arreglos
+array_Aggregate: () = {
+    Expression, ("," Expression)* => ()
+};
+
+// Secuencia de parámetros formales
+Formal_Param_Seq: () = {
+    proper_FP_Sequence?
+};
+
+// Secuencia de parámetros formales propiamente dicha
+proper_FP_Sequence: () = {
+    Formal_Parameter, ("," Formal_Parameter)* => ()
+};
+
+// Denotador de tipo
+Type_denoter: () = {
+    Identifier
+};
+
+// Parámetro formal
+Formal_Parameter: () = {
+    Identifier, ":", Type_denoter => ()
+};
+
+// Denotador de tipo de registro
+Record_Type_denoter: () = {
+    Identifier, ":", Type_denoter, ("," Identifier ":" Type_denoter)* => ()
+};
+
+

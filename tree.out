@@ -17,7 +17,7 @@ let(
    type(typeName("Boolean")),
    result(
       op(
-   /\\,
+   /\,
    op(
    <=,
    call("ord",params([char(65)])),

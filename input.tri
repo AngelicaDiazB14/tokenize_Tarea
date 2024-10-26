@@ -3,7 +3,7 @@ let
    var i : integer;
    func capital (var chr : Char) : Boolean ~
        (ord('A') <= ord(ch))
-         /\\ (ord(ch) <= ord('Z'))
+         /\ (ord(ch) <= ord('Z'))
 in
 ! hola
   begin

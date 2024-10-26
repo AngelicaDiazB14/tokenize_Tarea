@@ -1,3 +1,12 @@
+### Integrantes
+
+**Angelica Diaz Barrios - 2021044256**
+**Katerine Guzman Flores - 2019390523**
+**Rafael Vargas Bello - 2021123304**
+**Joseph David Santamaria Castro - 2021044250**
+**David Brenes Martínez - 2017093927**
+
+
 
 ### Comandos para compilar el proyecto
 

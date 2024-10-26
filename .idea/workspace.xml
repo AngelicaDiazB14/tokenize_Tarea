@@ -8,9 +8,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bcd2f0c5-1dc0-43b6-b654-05866347903a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/grammar.pest" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/parser_test.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+<<<<<<< Updated upstream
+=======
+      <change beforePath="$PROJECT_DIR$/src/parse2.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/parse2.rs" afterDir="false" />
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +61,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+<<<<<<< Updated upstream
     "Cargo.Run main.executor": "Run",
     "Cargo.Run parse.executor": "Run",
     "Cargo.Run token.executor": "Run",
@@ -68,6 +74,16 @@
     "RunOnceActivity.rust.reset.selective.auto.import": "true",
     "git-widget-placeholder": "David",
     "last_opened_file_path": "C:/GitHub/tokenize_Tarea",
+=======
+    "Cargo.Run tokenize.executor": "Debug",
+    "Cargo.RunTest.executor": "Run",
+    "Cargo.Test tokenize.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.rust.reset.selective.auto.import": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/Matute/OneDrive - Estudiantes ITCR/Escritorio",
+>>>>>>> Stashed changes
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -76,8 +92,14 @@
     "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
     "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
     "org.rust.disableDetachedFileInspectionC:/Users/Bafa4/OneDrive - Estudiantes ITCR/TEC/2024/IIS/Compiladores/Tareas_Programadas/tokenize_Tarea/src/pare.rs": "true",
+<<<<<<< Updated upstream
     "org.rust.first.attach.projects": "true",
     "settings.editor.selected.configurable": "preferences.pluginManager",
+=======
+    "org.rust.disableDetachedFileInspectionC:/Users/Matute/OneDrive - Estudiantes ITCR/Escritorio/II SEMESTRE 2024/COMPILADORES_E_INTEPRETES/PROYECTO2/tokenize_Tarea/target/lector.rs": "true",
+    "org.rust.first.attach.projects": "true",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
+>>>>>>> Stashed changes
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -87,6 +109,7 @@
       <recent name="C:\GitHub\tokenize_Tarea\src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\GitHub\tokenize_Tarea\src" />
       <recent name="C:\Users\Bafa4\OneDrive - Estudiantes ITCR\TEC\2024\IIS\Compiladores\Tareas_Programadas\tokenize_Tarea" />
     </key>
   </component>
@@ -233,7 +256,12 @@
       <workItem from="1728673142559" duration="297000" />
       <workItem from="1728789004244" duration="1517000" />
       <workItem from="1728955189183" duration="2720000" />
+<<<<<<< Updated upstream
       <workItem from="1729446081104" duration="13431000" />
+=======
+      <workItem from="1729549301721" duration="40758000" />
+      <workItem from="1729826132054" duration="16821000" />
+>>>>>>> Stashed changes
     </task>
     <servers />
   </component>
@@ -254,5 +282,21 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="solo cambié el nombre del archivo por defecto de salida" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/src/parse2.rs</url>
+          <line>84</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/src/parse2.rs</url>
+          <line>83</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

@@ -27,5 +27,14 @@ name = "pare"
 path = "src/pare.rs"
 
 [[bin]]
+<<<<<<< Updated upstream
 name = "token"
 path = "src/token.rs"
+=======
+name = "pare"
+path = "src/pare.rs"
+
+[[bin]]
+name = "parser_test"
+path = "src/parser_test.rs"
+>>>>>>> Stashed changes
